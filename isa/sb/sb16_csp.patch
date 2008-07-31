@@ -11,8 +11,7 @@
  	if (!program) {
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 5, 0)
  		int err = request_firmware(&program, names[index],
--				       p->chip->card->dev);
-+					   p->chip->card->dev);
+ 				       p->chip->card->dev);
 +#else
 +		int err = request_firmware(&program, names[index], "sb16_csp");
 +#endif
