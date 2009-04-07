@@ -26,8 +26,8 @@ gina20.c: gina20.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/gina20.c echoaudi
 gina24.c: gina24.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/gina24.c echoaudio.c
 indigo.c: indigo.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/indigo.c echoaudio.c
 indigodj.c: indigodj.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/indigodj.c echoaudio.c
-indigoio.c: indigoio.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/indigoio.c echoaudio.c
 indigodjx.c: indigodjx.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/indigodjx.c echoaudio.c
+indigoio.c: indigoio.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/indigoio.c echoaudio.c
 indigoiox.c: indigoiox.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/indigoiox.c echoaudio.c
 layla20.c: layla20.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/layla20.c echoaudio.c
 layla24.c: layla24.patch $(SND_TOPDIR)/alsa-kernel/pci/echoaudio/layla24.c echoaudio.c
