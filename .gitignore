@@ -27,7 +27,6 @@ alsa-kernel
 scripts
 linux
 sound
-include/sound
 
 acore/control.c
 acore/hrtimer.c
