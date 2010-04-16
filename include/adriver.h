@@ -1425,6 +1425,7 @@ static inline int snd_pci_enable_msi(struct pci_dev *dev) { return -1; }
 /* kmemdup() wrapper */
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 19) || defined(CONFIG_SND_DEBUG_MEMORY)
 #include <linux/string.h>
+#include <linux/slab.h>
 static inline void *snd_kmemdup(const void *src, size_t len, gfp_t gfp)
 {
 	void *dst = kmalloc(len, gfp);
@@ -1998,6 +1999,16 @@ blocking_notifier_chain_unregister(struct blocking_notifier_head *nh,
 #ifndef pgprot_noncached
 #define pgprot_noncached(x) (x)
 #endif
+#endif
+
+/* no_llseek() */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 4, 0)
+#define no_llseek	NULL
+#endif
+
+/* nonseekable_open() */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 8)
+#define nonseekable_open(i,f) 0
 #endif
 
 #endif /* __SOUND_LOCAL_DRIVER_H */
