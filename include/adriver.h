@@ -1932,6 +1932,55 @@ static inline void *vzalloc(unsigned long size)
 }
 #endif
 
+/* flush_delayed_work_sync() wrapper */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 37)
+#include <linux/workqueue.h>
+static inline bool flush_work_sync(struct work_struct *work)
+{
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 27)
+	/* XXX */
+	flush_scheduled_work();
+	return true;
+#else
+	if (!flush_work(work))
+		return false;
+	while (flush_work(work))
+		;
+	return true;
+#endif
+}
+
+static inline bool flush_delayed_work_sync(struct delayed_work *dwork)
+{
+	bool ret;
+	ret = cancel_delayed_work(dwork);
+	if (ret) {
+		schedule_delayed_work(dwork, 0);
+		flush_scheduled_work();
+	}
+	return ret;
+}
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 23)
+/* XXX this is a workaround; these are really different, but almost same
+ * as used in the usual free/error path
+ */
+#define cancel_delayed_work_sync flush_delayed_work_sync
+#endif
+
+#endif /* < 2.6.37 */
+
+/* pm_wakeup_event() wrapper */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 37)
+#define pm_wakeup_event(dev, msec)
+#endif
+
+/* request_any_context_irq() wrapper */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 35)
+#define request_any_context_irq(irq, fn, flags, name, dev_id) \
+	request_irq(irq, fn, flags, name, dev_id)
+#endif
+
 /* hack - CONFIG_SND_HDA_INPUT_JACK can be wrongly set for older kernels */
 #ifndef CONFIG_SND_JACK
 #undef CONFIG_SND_HDA_INPUT_JACK
