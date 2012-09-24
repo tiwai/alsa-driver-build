@@ -1,0 +1,19 @@
+ALSA branches
+=============
+
+master		- just stub with this text
+
+build		- build code (not included to upstream,
+		  can touch only alsa/ tree)
+mirror		- mirrored code (from upstream)
+release		- merged build & mirror trees for packaging
+
+Branch release
+==============
+
+Please, use --log for the git merge command to show the "subject" of commits.
+It might be handy to define these git aliases in your .git/config file:
+
+[alias]
+	bmerge = !git checkout release && git merge --log build
+	mmerge = !git checkout release && git merge --log mirror
