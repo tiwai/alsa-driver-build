@@ -1,5 +1,5 @@
---- ../../alsa-kernel/include/tea575x-tuner.h	2012-04-05 17:55:31.000000000 +0200
-+++ tea575x-tuner.h	2012-04-11 14:51:22.000000000 +0200
+--- ../../alsa-kernel/include/tea575x-tuner.h	2012-10-15 10:04:02.000000000 +0200
++++ tea575x-tuner.h	2012-10-15 10:57:48.000000000 +0200
 @@ -24,6 +24,9 @@
  
  #include <linux/videodev2.h>
@@ -10,10 +10,10 @@
  #include <media/v4l2-dev.h>
  #include <media/v4l2-device.h>
  
-@@ -52,13 +55,21 @@
- 	bool stereo;			/* receiving stereo */
+@@ -61,13 +64,21 @@
  	bool tuned;			/* tuned to a station */
  	unsigned int val;		/* hw value */
+ 	u32 band;			/* 0: FM, 1: FM-Japan, 2: AM */
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 4, 0)
  	u32 freq;			/* frequency */
 +#else
