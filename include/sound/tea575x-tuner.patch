@@ -1,5 +1,5 @@
 --- ../../alsa-kernel/include/tea575x-tuner.h	2012-10-15 10:04:02.000000000 +0200
-+++ tea575x-tuner.h	2012-10-15 10:57:48.000000000 +0200
++++ tea575x-tuner.h	2012-10-15 14:14:07.000000000 +0200
 @@ -24,6 +24,9 @@
  
  #include <linux/videodev2.h>
@@ -10,7 +10,17 @@
  #include <media/v4l2-dev.h>
  #include <media/v4l2-device.h>
  
-@@ -61,13 +64,21 @@
+@@ -53,7 +56,9 @@
+ 	struct video_device vd;		/* video device */
+ 	int radio_nr;			/* radio_nr */
+ 	bool tea5759;			/* 5759 chip is present */
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 0)
+ 	bool has_am;			/* Device can tune to AM freqs */
++#endif
+ 	bool cannot_read_data;		/* Device cannot read the data pin */
+ 	bool cannot_mute;		/* Device cannot mute */
+ 	bool mute;			/* Device is muted? */
+@@ -61,18 +66,28 @@
  	bool tuned;			/* tuned to a station */
  	unsigned int val;		/* hw value */
  	u32 band;			/* 0: FM, 1: FM-Japan, 2: AM */
@@ -32,3 +42,10 @@
  	int (*ext_init)(struct snd_tea575x *tea);
  };
  
+ int snd_tea575x_init(struct snd_tea575x *tea, struct module *owner);
+ void snd_tea575x_exit(struct snd_tea575x *tea);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 0)
+ void snd_tea575x_set_freq(struct snd_tea575x *tea);
++#endif
+ 
+ #endif /* __SOUND_TEA575X_TUNER_H */
