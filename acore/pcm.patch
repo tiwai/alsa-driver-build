@@ -1,30 +1,11 @@
---- ../alsa-kernel/core/pcm.c	2012-10-17 09:25:29.000000000 +0200
-+++ pcm.c	2012-10-25 01:08:45.000000000 +0200
-@@ -1,3 +1,23 @@
+--- ../alsa-kernel/core/pcm.c	2009-11-10 18:21:52.000000000 +0100
++++ pcm.c	2009-12-15 22:17:50.000000000 +0100
+@@ -1,3 +1,4 @@
 +#include "adriver.h"
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 4, 0)
-+#include <linux/compat.h>
-+static inline int get_compat_timespec(struct timespec *ts,
-+				      const struct compat_timespec __user *cts)
-+{
-+	return (!access_ok(VERIFY_READ, cts, sizeof(*cts)) ||
-+			__get_user(ts->tv_sec, &cts->tv_sec) ||
-+			__get_user(ts->tv_nsec, &cts->tv_nsec)) ? -EFAULT : 0;
-+}
-+
-+static inline int put_compat_timespec(const struct timespec *ts,
-+				      struct compat_timespec __user *cts)
-+{
-+	return (!access_ok(VERIFY_WRITE, cts, sizeof(*cts)) ||
-+			__put_user(ts->tv_sec, &cts->tv_sec) ||
-+			__put_user(ts->tv_nsec, &cts->tv_nsec)) ? -EFAULT : 0;
-+}
-+#endif
-+
  /*
   *  Digital Audio (PCM) abstract layer
   *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
-@@ -991,8 +1011,12 @@
+@@ -928,8 +929,12 @@
  	substream->pstr->substream_opened--;
  }
  
@@ -37,7 +18,7 @@
  {
  	struct snd_pcm *pcm;
  	const char *str;
-@@ -1003,7 +1027,11 @@
+@@ -940,7 +945,11 @@
  		[SNDRV_PCM_CLASS_DIGITIZER] = "digitizer",
  	};
  
@@ -49,7 +30,7 @@
  	    pcm->dev_class > SNDRV_PCM_CLASS_LAST)
  		str = "none";
  	else
-@@ -1011,7 +1039,11 @@
+@@ -948,7 +957,11 @@
          return snprintf(buf, PAGE_SIZE, "%s\n", str);
  }
  
@@ -61,7 +42,7 @@
  	__ATTR(pcm_class, S_IRUGO, show_pcm_class, NULL);
  
  static int snd_pcm_dev_register(struct snd_device *device)
-@@ -1063,7 +1095,7 @@
+@@ -1000,7 +1013,7 @@
  			return err;
  		}
  		snd_add_device_sysfs_file(devtype, pcm->card, pcm->device,
