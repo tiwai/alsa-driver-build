@@ -61,6 +61,9 @@ drivers/portman2x4.c
 drivers/opl3/opl3_lib.c
 firewire/cmp.c
 firewire/iso-resources.c
+firewire/isight.c
+firewire/scs1x.c
+firewire/speakers.c
 isa/sb/sb16_csp.c
 isa/wavefront/wavefront_fx.c
 isa/wavefront/wavefront_synth.c
