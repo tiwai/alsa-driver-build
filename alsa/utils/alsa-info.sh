@@ -393,8 +393,10 @@ trap cleanup 0
 if [ "$PROCEED" = "yes" ]; then
 
 if [ -z "$LSPCI" ]; then
-	echo "This script requires lspci. Please install it, and re-run this script."
-	exit 0
+	if [ -d /sys/bus/pci ]; then
+		echo "This script requires lspci. Please install it, and re-run this script."
+		exit 0
+	fi
 fi
 
 #Fetch the info and store in temp files/variables
@@ -407,8 +409,6 @@ KERNEL_OS=`uname -o`
 ALSA_DRIVER_VERSION=`cat /proc/asound/version |head -n1|awk {'print $7'} |sed 's/\.$//'`
 get_alsa_library_version
 ALSA_UTILS_VERSION=`amixer -v |awk {'print $3'}`
-VENDOR_ID=`lspci -vn | grep 040[1-3] | awk -F':' '{print $3}'| awk {'print substr($0, 2);}' >$TEMPDIR/vendor_id.tmp`
-DEVICE_ID=`lspci -vn | grep 040[1-3] | awk -F':' '{print $4}'| awk {'print $1'} >$TEMPDIR/device_id.tmp`
 LAST_CARD=$((`grep "]: " /proc/asound/cards | wc -l` - 1 ))
 
 ESDINST=$(which esd 2>/dev/null| sed 's|^[^/]*||' 2>/dev/null)
@@ -434,7 +434,9 @@ fi
 
 cat /proc/asound/modules 2>/dev/null|awk {'print $2'}>$TEMPDIR/alsamodules.tmp
 cat /proc/asound/cards >$TEMPDIR/alsacards.tmp
+if [[ ! -z "$LSPCI" ]]; then
 lspci |grep -i "multi\|audio">$TEMPDIR/lspci.tmp
+fi
 
 #Check for HDA-Intel cards codec#*
 cat /proc/asound/card*/codec\#* > $TEMPDIR/alsa-hda-intel.tmp 2> /dev/null
@@ -547,6 +549,8 @@ echo "" >> $FILE
 cat $TEMPDIR/alsacards.tmp >> $FILE
 echo "" >> $FILE
 echo "" >> $FILE
+
+if [[ ! -z "$LSPCI" ]]; then
 echo "!!PCI Soundcards installed in the system" >> $FILE
 echo "!!--------------------------------------" >> $FILE
 echo "" >> $FILE
@@ -559,6 +563,7 @@ echo "" >> $FILE
 lspci -vvn |grep -A1 040[1-3] >> $FILE
 echo "" >> $FILE
 echo "" >> $FILE
+fi
 
 if [ "$SNDOPTIONS" ]
 then
