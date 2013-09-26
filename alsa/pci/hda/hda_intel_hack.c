@@ -22,3 +22,7 @@ struct kernel_param_ops {
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 30)
 #define HAVE_TIMECOUNTER
 #endif
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 12, 0)
+#define vga_switcheroo_init_domain_pm_optimus_hdmi_audio(x, y)
+#endif
