@@ -1,29 +1,11 @@
---- ../alsa-kernel/pci/fm801.c	2012-04-24 12:18:48.000000000 +0200
-+++ fm801.c	2012-04-24 12:31:23.000000000 +0200
-@@ -1,3 +1,12 @@
+--- ../alsa-kernel/pci/fm801.c	2013-09-26 10:20:39.774474402 +0200
++++ fm801.c	2013-09-26 16:13:33.707111539 +0200
+@@ -1,3 +1,4 @@
 +#include "adriver.h"
-+/* dummy v4l2_device definition */
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 29)
-+struct v4l2_device {
-+	int dummy;
-+};
-+#define v4l2_device_register(x, y) 0
-+#define v4l2_device_unregister(x)
-+#endif
  /*
   *  The driver for the ForteMedia FM801 based soundcards
   *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
-@@ -37,6 +46,9 @@
- #include <asm/io.h>
- 
- #ifdef CONFIG_SND_FM801_TEA575X_BOOL
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 29)
-+#define v4l2_file_operations	file_operations
-+#endif
- #include <sound/tea575x-tuner.h>
- #endif
- 
-@@ -1221,7 +1233,7 @@
+@@ -1233,7 +1234,7 @@
  		pci_set_master(pci);
  	}
  
@@ -32,7 +14,7 @@
  		chip->multichannel = 1;
  
  	snd_fm801_chip_init(chip, 0);
-@@ -1428,3 +1440,5 @@
+@@ -1445,3 +1446,5 @@
  };
  
  module_pci_driver(fm801_driver);
