@@ -1,5 +1,5 @@
---- ../alsa-kernel/soc/soc-core.c	2012-03-05 15:14:19.000000000 +0100
-+++ soc-core.c	2012-03-05 21:20:53.000000000 +0100
+--- ../alsa-kernel/soc/soc-core.c	2013-08-30 14:01:20.038898317 +0200
++++ soc-core.c	2013-09-26 16:20:06.661104805 +0200
 @@ -1,3 +1,9 @@
 +#include "adriver.h"
 +#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 27)
@@ -10,9 +10,9 @@
  /*
   * soc-core.c  --  ALSA SoC Audio Layer
   *
-@@ -504,6 +510,11 @@
+@@ -552,6 +558,11 @@
+ 	 */
  }
- #endif
  
 +/* XXX */
 +#if !defined(CONFIG_PM_SLEEP) && defined(CONFIG_PM)
@@ -22,7 +22,7 @@
  #ifdef CONFIG_PM_SLEEP
  /* powers down audio subsystem for suspend */
  int snd_soc_suspend(struct device *dev)
-@@ -1722,6 +1733,7 @@
+@@ -1952,6 +1963,7 @@
  }
  EXPORT_SYMBOL_GPL(snd_soc_poweroff);
  
@@ -30,7 +30,7 @@
  const struct dev_pm_ops snd_soc_pm_ops = {
  	.suspend = snd_soc_suspend,
  	.resume = snd_soc_resume,
-@@ -1731,16 +1743,37 @@
+@@ -1961,16 +1973,37 @@
  	.restore = snd_soc_resume,
  };
  EXPORT_SYMBOL_GPL(snd_soc_pm_ops);
