@@ -1,5 +1,5 @@
---- ../../alsa-kernel/pci/hda/hda_beep.c	2013-04-03 16:11:08.129694276 +0200
-+++ hda_beep.c	2013-04-05 08:57:10.622013025 +0200
+--- ../../alsa-kernel/pci/hda/hda_beep.c	2013-10-24 11:38:36.463985941 +0200
++++ hda_beep.c	2013-10-24 14:55:48.026984530 +0200
 @@ -1,3 +1,5 @@
 +#define __NO_VERSION__
 +#include "adriver.h"
@@ -47,10 +47,10 @@
 +#else
 +	input_dev = kzalloc(sizeof(*input_dev), GFP_KERNEL);
 +#endif
- 	if (!input_dev) {
- 		printk(KERN_INFO "hda_beep: unable to allocate input device\n");
+ 	if (!input_dev)
  		return -ENOMEM;
-@@ -168,15 +183,26 @@
+ 
+@@ -166,15 +181,26 @@
  	input_dev->evbit[0] = BIT_MASK(EV_SND);
  	input_dev->sndbit[0] = BIT_MASK(SND_BELL) | BIT_MASK(SND_TONE);
  	input_dev->event = snd_hda_beep_event;
