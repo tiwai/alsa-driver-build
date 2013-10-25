@@ -1,5 +1,5 @@
---- ../alsa-kernel/firewire/cmp.c	2012-05-31 21:22:53.000000000 +0200
-+++ cmp.c	2012-06-01 08:39:42.000000000 +0200
+--- ../alsa-kernel/firewire/cmp.c	2013-10-22 10:03:16.835007244 +0200
++++ cmp.c	2013-10-25 14:27:13.144974424 +0200
 @@ -1,3 +1,11 @@
 +#define __NO_VERSION__
 +#include "adriver.h"
@@ -12,10 +12,10 @@
  /*
   * Connection Management Procedures (IEC 61883-1) helper functions
   *
-@@ -51,7 +59,12 @@
- 	struct fw_device *device = fw_parent_device(c->resources.unit);
- 	int generation = c->resources.generation;
- 	int rcode, errors = 0;
+@@ -48,7 +56,12 @@
+ 		      int (*check)(struct cmp_connection *c, __be32 pcr),
+ 		      enum bus_reset_handling bus_reset_handling)
+ {
 -	__be32 old_arg, buffer[2];
 +	__be32 old_arg;
 +#if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 39)
