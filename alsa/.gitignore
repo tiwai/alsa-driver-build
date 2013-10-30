@@ -60,6 +60,7 @@ drivers/pcsp/pcsp_lib.c
 drivers/portman2x4.c
 drivers/opl3/opl3_lib.c
 firewire/cmp.c
+firewire/dice.c
 firewire/iso-resources.c
 firewire/isight.c
 firewire/scs1x.c
