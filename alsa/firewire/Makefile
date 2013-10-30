@@ -5,7 +5,7 @@ endif
 include $(SND_TOPDIR)/toplevel.config
 include $(SND_TOPDIR)/Makefile.conf
 
-clean-files := cmp.c iso-resources.c isight.c scs1x.c speakers.c
+clean-files := cmp.c dice.c iso-resources.c isight.c scs1x.c speakers.c
 
 include $(SND_TOPDIR)/alsa-kernel/firewire/Makefile
 
