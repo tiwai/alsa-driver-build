@@ -1,5 +1,5 @@
---- ../alsa-kernel/core/memalloc.c	2013-10-29 12:01:07.687030626 +0100
-+++ memalloc.c	2013-10-29 12:02:03.024035743 +0100
+--- ../alsa-kernel/core/memalloc.c	2013-11-27 08:48:59.676641382 +0100
++++ memalloc.c	2013-11-27 09:07:09.599262109 +0100
 @@ -1,3 +1,4 @@
 +#include "memalloc.inc"
  /*
@@ -213,23 +213,23 @@
  	dmab->area = NULL;
  	dmab->addr = 0;
  
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0)
  	if (dev->of_node)
  		pool = of_get_named_gen_pool(dev->of_node, "iram", 0);
  
-@@ -189,6 +347,7 @@
- 		return;
+@@ -185,6 +343,7 @@
+ 	dmab->private_data = pool;
  
- 	dmab->addr = gen_pool_virt_to_phys(pool, (unsigned long)dmab->area);
+ 	dmab->area = gen_pool_dma_alloc(pool, size, &dmab->addr);
 +#endif
  }
  
  /**
-@@ -197,10 +356,12 @@
+@@ -193,10 +352,12 @@
   */
  static void snd_free_dev_iram(struct snd_dma_buffer *dmab)
  {
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0)
  	struct gen_pool *pool = dmab->private_data;
  
  	if (pool && dmab->area)
@@ -238,7 +238,7 @@
  }
  #endif /* CONFIG_GENERIC_ALLOCATOR */
  #endif /* CONFIG_HAS_DMA */
-@@ -428,6 +589,7 @@
+@@ -424,6 +585,7 @@
  
  
  #ifdef CONFIG_PROC_FS
@@ -246,7 +246,7 @@
  /*
   * proc file interface
   */
-@@ -566,6 +728,7 @@
+@@ -562,6 +724,7 @@
  	.release	= single_release,
  };
  
@@ -254,7 +254,7 @@
  #endif /* CONFIG_PROC_FS */
  
  /*
-@@ -575,15 +738,23 @@
+@@ -571,15 +734,23 @@
  static int __init snd_mem_init(void)
  {
  #ifdef CONFIG_PROC_FS
@@ -278,7 +278,7 @@
  	free_all_reserved_pages();
  	if (snd_allocated_pages > 0)
  		printk(KERN_ERR "snd-malloc: Memory leak?  pages not freed = %li\n", snd_allocated_pages);
-@@ -606,3 +777,5 @@
+@@ -602,3 +773,5 @@
  
  EXPORT_SYMBOL(snd_malloc_pages);
  EXPORT_SYMBOL(snd_free_pages);
