@@ -1775,4 +1775,8 @@ static inline struct fd fdget(unsigned int fd)
 }
 #endif
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 13, 0)
+#define reinit_completion(x)	((x)->done = 0)
+#endif
+
 #endif /* __SOUND_LOCAL_DRIVER_H */
