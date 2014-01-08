@@ -15,7 +15,7 @@ snd-objs += wrappers.o misc_driver.o
 ifeq ($(CONFIG_SND_DEBUG_MEMORY),y)
 snd-objs += memory_debug.o
 endif
-snd-page-alloc-objs += memory_wrapper.o
+snd-objs += memory_wrapper.o
 snd-hpet-objs := hpetimer.o
 
 obj-$(CONFIG_SND_HPET) += snd-hpet.o

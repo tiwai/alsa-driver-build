@@ -14,21 +14,6 @@
 #define SKIP_HIDDEN_MALLOCS 1
 #include "adriver.h"
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,3,0) && defined(CONFIG_PROC_FS)
-#include <linux/proc_fs.h>
-static inline struct proc_dir_entry *create_proc_read_entry(const char *name,
-	mode_t mode, struct proc_dir_entry *base, 
-	read_proc_t *read_proc, void * data)
-{
-	struct proc_dir_entry *res=create_proc_entry(name,mode,base);
-	if (res) {
-		res->read_proc=read_proc;
-		res->data=data;
-	}
-	return res;
-}
-#endif
-
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 19)
 #undef WARN_ON
 #define WARN_ON(condition) ({						\
