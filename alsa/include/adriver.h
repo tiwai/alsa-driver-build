@@ -1779,4 +1779,12 @@ static inline struct fd fdget(unsigned int fd)
 #define reinit_completion(x)	((x)->done = 0)
 #endif
 
+/* including linux/async.h at at this point leads to a segfault in genksyms
+ * by some reason, so check with version number
+ */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 6, 0)
+#include <linux/list.h>
+#define ASYNC_DOMAIN_EXCLUSIVE(name)	LIST_HEAD(name)
+#endif
+
 #endif /* __SOUND_LOCAL_DRIVER_H */
