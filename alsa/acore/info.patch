@@ -1,5 +1,5 @@
---- ../alsa-kernel/core/info.c	2013-05-13 10:01:02.042914933 +0200
-+++ info.c	2013-05-13 10:18:58.422914805 +0200
+--- ../alsa-kernel/core/info.c	2014-02-14 08:10:32.317887679 +0100
++++ info.c	2014-02-14 10:32:00.169618030 +0100
 @@ -1,3 +1,7 @@
 +#define __NO_VERSION__
 +#include "adriver.h"
@@ -54,7 +54,7 @@
  static loff_t snd_info_entry_llseek(struct file *file, loff_t offset, int orig)
  {
  	struct snd_info_private_data *data;
-@@ -485,9 +516,28 @@
+@@ -490,9 +521,28 @@
  	return -ENOTTY;
  }
  
@@ -83,7 +83,7 @@
  	struct snd_info_private_data *data;
  	struct snd_info_entry *entry;
  
-@@ -513,7 +563,11 @@
+@@ -518,7 +568,11 @@
  	.read =			snd_info_entry_read,
  	.write =		snd_info_entry_write,
  	.poll =			snd_info_entry_poll,
@@ -95,7 +95,7 @@
  	.mmap =			snd_info_entry_mmap,
  	.open =			snd_info_entry_open,
  	.release =		snd_info_entry_release,
-@@ -573,7 +627,11 @@
+@@ -578,7 +632,11 @@
  #ifdef CONFIG_SND_OSSEMUL
  		snd_info_free_entry(snd_oss_root);
  #endif
@@ -107,7 +107,7 @@
  	}
  	return 0;
  }
-@@ -635,7 +693,11 @@
+@@ -640,7 +698,11 @@
  {
  	mutex_lock(&info_mutex);
  	if (card->proc_root_link) {
@@ -119,7 +119,7 @@
  		card->proc_root_link = NULL;
  	}
  	if (strcmp(card->id, card->proc_root->name))
-@@ -654,7 +716,11 @@
+@@ -659,7 +721,11 @@
  	if (!card)
  		return;
  	mutex_lock(&info_mutex);
@@ -131,7 +131,7 @@
  	card->proc_root_link = NULL;
  	if (card->proc_root)
  		snd_info_disconnect(card->proc_root);
-@@ -842,7 +908,11 @@
+@@ -847,7 +913,11 @@
  	list_del_init(&entry->list);
  	root = entry->parent == NULL ? snd_proc_root : entry->parent->p;
  	snd_BUG_ON(!root);
@@ -143,7 +143,7 @@
  	entry->p = NULL;
  }
  
-@@ -943,6 +1013,17 @@
+@@ -948,6 +1018,17 @@
  		return -ENXIO;
  	root = entry->parent == NULL ? snd_proc_root : entry->parent->p;
  	mutex_lock(&info_mutex);
@@ -161,7 +161,7 @@
  	if (S_ISDIR(entry->mode)) {
  		p = proc_mkdir_mode(entry->name, entry->mode, root);
  		if (!p) {
-@@ -958,6 +1039,7 @@
+@@ -963,6 +1044,7 @@
  		}
  		proc_set_size(p, entry->size);
  	}
@@ -169,7 +169,7 @@
  	entry->p = p;
  	if (entry->parent)
  		list_add_tail(&entry->list, &entry->parent->children);
-@@ -975,9 +1057,20 @@
+@@ -980,9 +1062,20 @@
  
  static void snd_info_version_read(struct snd_info_entry *entry, struct snd_info_buffer *buffer)
  {

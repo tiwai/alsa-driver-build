@@ -1,19 +1,19 @@
---- ../alsa-kernel/pci/via82xx.c	2012-04-24 12:18:48.000000000 +0200
-+++ via82xx.c	2012-04-24 12:32:51.000000000 +0200
+--- ../alsa-kernel/pci/via82xx.c	2014-02-14 10:29:56.475068093 +0100
++++ via82xx.c	2014-02-14 10:46:42.779861823 +0100
 @@ -1,3 +1,4 @@
 +#include "adriver.h"
  /*
   *   ALSA driver for VIA VT82xx (South Bridge)
   *
-@@ -2513,6 +2514,7 @@
+@@ -2541,6 +2542,7 @@
  	int chip_type = 0, card_type;
  	unsigned int i;
  	int err;
 +	unsigned char revision = snd_pci_revision(pci);
  
- 	err = snd_card_create(index, id, THIS_MODULE, 0, &card);
+ 	err = snd_card_new(&pci->dev, index, id, THIS_MODULE, 0, &card);
  	if (err < 0)
-@@ -2522,14 +2524,14 @@
+@@ -2550,14 +2552,14 @@
  	switch (card_type) {
  	case TYPE_CARD_VIA686:
  		strcpy(card->driver, "VIA686A");
@@ -31,7 +31,7 @@
  				chip_type = via823x_cards[i].type;
  				strcpy(card->shortname, via823x_cards[i].name);
  				break;
-@@ -2537,7 +2539,7 @@
+@@ -2565,7 +2567,7 @@
  		}
  		if (chip_type != TYPE_VIA8233A) {
  			if (dxs_support == VIA_DXS_AUTO)
@@ -40,7 +40,7 @@
  			/* force to use VIA8233 or 8233A model according to
  			 * dxs_support module option
  			 */
-@@ -2548,7 +2550,7 @@
+@@ -2576,7 +2578,7 @@
  		}
  		if (chip_type == TYPE_VIA8233A)
  			strcpy(card->driver, "VIA8233A");
@@ -49,7 +49,7 @@
  			strcpy(card->driver, "VIA8237"); /* no slog assignment */
  		else
  			strcpy(card->driver, "VIA8233");
-@@ -2559,7 +2561,7 @@
+@@ -2587,7 +2589,7 @@
  		goto __error;
  	}
  		
@@ -58,7 +58,7 @@
  				      ac97_clock, &chip)) < 0)
  		goto __error;
  	card->private_data = chip;
-@@ -2631,3 +2633,5 @@
+@@ -2657,3 +2659,5 @@
  };
  
  module_pci_driver(via82xx_driver);

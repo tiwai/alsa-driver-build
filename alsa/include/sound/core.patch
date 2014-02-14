@@ -1,6 +1,6 @@
---- ../../alsa-kernel/include/core.h	2012-10-30 11:00:52.000000000 +0100
-+++ core.h	2012-11-23 17:56:50.000000000 +0100
-@@ -104,8 +104,16 @@
+--- ../../alsa-kernel/include/core.h	2014-02-14 10:29:56.461067921 +0100
++++ core.h	2014-02-14 10:30:41.512621336 +0100
+@@ -108,8 +108,16 @@
  	char shortname[32];		/* short name of this soundcard */
  	char longname[80];		/* name of this soundcard */
  	char mixername[80];		/* mixer name */
@@ -17,7 +17,7 @@
  	struct module *module;		/* top-level module */
  
  	void *private_data;		/* private data for soundcard */
-@@ -125,7 +133,15 @@
+@@ -129,7 +137,15 @@
  	struct snd_info_entry *proc_id;	/* the card id */
  	struct proc_dir_entry *proc_root_link;	/* number link to real id */
  
@@ -33,17 +33,7 @@
  	struct snd_shutdown_f_ops *s_f_ops; /* file operations in the shutdown
  								state */
  	spinlock_t files_lock;		/* lock the files for this card */
-@@ -134,7 +150,9 @@
- 	wait_queue_head_t shutdown_sleep;
- 	atomic_t refcount;		/* refcount for disconnection */
- 	struct device *dev;		/* device assigned to this card */
-+#ifndef CONFIG_SYSFS_DEPRECATED
- 	struct device *card_dev;	/* cardX object for sysfs */
-+#endif
- 
- #ifdef CONFIG_PM
- 	unsigned int power_state;	/* power state */
-@@ -146,6 +164,17 @@
+@@ -149,6 +165,17 @@
  	struct snd_mixer_oss *mixer_oss;
  	int mixer_oss_change_count;
  #endif
@@ -60,22 +50,10 @@
 +#endif /* !__GENKSYMS__ */
  };
  
- #ifdef CONFIG_PM
-@@ -196,7 +225,11 @@
- /* return a device pointer linked to each sound device as a parent */
- static inline struct device *snd_card_get_device_link(struct snd_card *card)
- {
-+#ifdef CONFIG_SYSFS_DEPRECATED
-+	return card ? card->dev : NULL;
-+#else
- 	return card ? card->card_dev : NULL;
-+#endif
- }
- 
- /* sound.c */
-@@ -299,7 +332,11 @@
+ #define dev_to_snd_card(p)	container_of(p, struct snd_card, card_dev)
+@@ -310,7 +337,11 @@
  int snd_card_file_remove(struct snd_card *card, struct file *file);
- void snd_card_unref(struct snd_card *card);
+ #define snd_card_unref(card)	put_device(&(card)->card_dev)
  
 +#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 0)
 +#define snd_card_set_dev(card,dev) /* no struct device */
@@ -85,7 +63,7 @@
  
  /* device.c */
  
-@@ -424,13 +461,21 @@
+@@ -438,13 +469,21 @@
  
  /* for easier backward-porting */
  #if defined(CONFIG_GAMEPORT) || defined(CONFIG_GAMEPORT_MODULE)
