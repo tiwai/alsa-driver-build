@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_VERSION=0.4.62
+SCRIPT_VERSION=0.4.63
 CHANGELOG="http://www.alsa-project.org/alsa-info.sh.changelog"
 
 #################################################################################
@@ -246,7 +246,7 @@ withdmesg() {
 	echo "!!ALSA/HDA dmesg" >> $FILE
 	echo "!!--------------" >> $FILE
 	echo "" >> $FILE
-	dmesg | grep -C1 -E 'ALSA|HDA|HDMI|sound|hda.codec|hda.intel' >> $FILE
+	dmesg | grep -C1 -E 'ALSA|HDA|HDMI|snd[_-]|sound|hda.codec|hda.intel' >> $FILE
 	echo "" >> $FILE
 	echo "" >> $FILE
 }
