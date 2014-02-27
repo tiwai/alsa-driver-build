@@ -22,6 +22,10 @@ static inline struct timespec __ns_to_timespec(const s64 nsec)
 #define ns_to_timespec __ns_to_timespec
 #endif /* RHEL */
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 13, 0)
+#include <linux/ratelimit.h>
+#endif
+
 #include "../alsa-kernel/core/pcm_lib.c"
 
 #ifdef CONFIG_SND_BIT32_EMUL_MODULE
