@@ -1787,4 +1787,25 @@ static inline struct fd fdget(unsigned int fd)
 #define ASYNC_DOMAIN_EXCLUSIVE(name)	LIST_HEAD(name)
 #endif
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 12, 0)
+#include <linux/sysfs.h>
+static inline int sysfs_create_groups(struct kobject *kobj,
+				      const struct attribute_group **groups)
+{
+	if (!groups)
+		return 0;
+	for (; *groups; groups++) {
+		int err = sysfs_create_group(kobj, *groups);
+		if (err)
+			return err;
+	}
+	return 0;
+}
+
+#ifndef DEVICE_ATTR_WO
+#define DEVICE_ATTR_WO(_name) \
+	struct device_attribute dev_attr_##_name = __ATTR_WO(_name)
+#endif
+#endif /* < 3.12 */
+
 #endif /* __SOUND_LOCAL_DRIVER_H */
