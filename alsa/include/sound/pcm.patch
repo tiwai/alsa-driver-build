@@ -1,5 +1,5 @@
---- ../../alsa-kernel/include/pcm.h	2014-02-14 08:10:32.314887640 +0100
-+++ pcm.h	2014-02-14 10:46:42.233854876 +0100
+--- ../../alsa-kernel/include/pcm.h	2014-02-24 17:09:07.801751307 +0100
++++ pcm.h	2014-02-27 09:40:11.649676426 +0100
 @@ -282,10 +282,18 @@
  	snd_pcm_uframes_t avail_max;
  	snd_pcm_uframes_t hw_ptr_base;	/* Position at buffer restart */

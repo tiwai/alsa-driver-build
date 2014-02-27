@@ -1,11 +1,11 @@
---- ../../alsa-kernel/usb/usx2y/usx2yhwdeppcm.c	2013-10-02 17:57:10.236598197 +0200
-+++ usx2yhwdeppcm.c	2014-02-14 10:46:43.917876302 +0100
+--- ../../alsa-kernel/usb/usx2y/usx2yhwdeppcm.c	2013-04-29 11:45:04.825944327 +0200
++++ usx2yhwdeppcm.c	2013-04-29 18:04:28.975941611 +0200
 @@ -1,3 +1,4 @@
 +#include "usx2yhwdeppcm.inc"
  /*
   *   This program is free software; you can redistribute it and/or modify
   *   it under the terms of the GNU General Public License as published by
-@@ -438,6 +439,9 @@
+@@ -443,6 +444,9 @@
  					if (0 == u)
  						atomic_set(&subs->state, state_STARTING3);
  					urb->dev = usX2Y->dev;

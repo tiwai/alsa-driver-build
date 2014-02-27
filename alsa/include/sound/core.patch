@@ -1,6 +1,6 @@
---- ../../alsa-kernel/include/core.h	2014-02-14 10:29:56.461067921 +0100
-+++ core.h	2014-02-14 10:30:41.512621336 +0100
-@@ -108,8 +108,16 @@
+--- ../../alsa-kernel/include/core.h	2014-02-27 09:26:54.802204556 +0100
++++ core.h	2014-02-27 09:28:32.882772147 +0100
+@@ -100,8 +100,16 @@
  	char shortname[32];		/* short name of this soundcard */
  	char longname[80];		/* name of this soundcard */
  	char mixername[80];		/* mixer name */
@@ -17,7 +17,7 @@
  	struct module *module;		/* top-level module */
  
  	void *private_data;		/* private data for soundcard */
-@@ -129,7 +137,15 @@
+@@ -121,7 +129,15 @@
  	struct snd_info_entry *proc_id;	/* the card id */
  	struct proc_dir_entry *proc_root_link;	/* number link to real id */
  
@@ -33,7 +33,7 @@
  	struct snd_shutdown_f_ops *s_f_ops; /* file operations in the shutdown
  								state */
  	spinlock_t files_lock;		/* lock the files for this card */
-@@ -149,6 +165,17 @@
+@@ -141,6 +157,17 @@
  	struct snd_mixer_oss *mixer_oss;
  	int mixer_oss_change_count;
  #endif
@@ -51,7 +51,7 @@
  };
  
  #define dev_to_snd_card(p)	container_of(p, struct snd_card, card_dev)
-@@ -310,7 +337,11 @@
+@@ -301,7 +328,11 @@
  int snd_card_file_remove(struct snd_card *card, struct file *file);
  #define snd_card_unref(card)	put_device(&(card)->card_dev)
  
@@ -63,7 +63,7 @@
  
  /* device.c */
  
-@@ -438,13 +469,21 @@
+@@ -428,13 +459,21 @@
  
  /* for easier backward-porting */
  #if defined(CONFIG_GAMEPORT) || defined(CONFIG_GAMEPORT_MODULE)
