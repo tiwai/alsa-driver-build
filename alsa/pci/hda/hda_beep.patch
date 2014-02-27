@@ -1,12 +1,12 @@
---- ../../alsa-kernel/pci/hda/hda_beep.c	2013-12-19 17:11:11.245210883 +0100
-+++ hda_beep.c	2014-02-14 10:46:43.090865780 +0100
+--- ../../alsa-kernel/pci/hda/hda_beep.c	2014-02-27 09:34:52.311696824 +0100
++++ hda_beep.c	2014-02-27 09:39:39.726178305 +0100
 @@ -1,3 +1,5 @@
 +#define __NO_VERSION__
 +#include "adriver.h"
  /*
   * Digital Beep Input Interface for HD-audio codec
   *
-@@ -104,7 +106,11 @@
+@@ -103,7 +105,11 @@
  static int snd_hda_beep_event(struct input_dev *dev, unsigned int type,
  				unsigned int code, int hz)
  {
@@ -18,7 +18,7 @@
  
  	switch (code) {
  	case SND_BELL:
-@@ -128,7 +134,9 @@
+@@ -127,7 +133,9 @@
  
  static void turn_off_beep(struct hda_beep *beep)
  {
@@ -28,7 +28,7 @@
  	if (beep->playing) {
  		/* turn off beep */
  		snd_hda_codec_write(beep->codec, beep->nid, 0,
-@@ -141,6 +149,9 @@
+@@ -140,6 +148,9 @@
  static void snd_hda_do_detach(struct hda_beep *beep)
  {
  	input_unregister_device(beep->dev);
@@ -38,7 +38,7 @@
  	beep->dev = NULL;
  	turn_off_beep(beep);
  }
-@@ -151,7 +162,11 @@
+@@ -150,7 +161,11 @@
  	struct hda_codec *codec = beep->codec;
  	int err;
  
@@ -50,16 +50,16 @@
  	if (!input_dev)
  		return -ENOMEM;
  
-@@ -167,15 +182,26 @@
+@@ -166,15 +181,26 @@
  	input_dev->evbit[0] = BIT_MASK(EV_SND);
  	input_dev->sndbit[0] = BIT_MASK(SND_BELL) | BIT_MASK(SND_TONE);
  	input_dev->event = snd_hda_beep_event;
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 22)
- 	input_dev->dev.parent = &codec->bus->pci->dev;
+ 	input_dev->dev.parent = codec->bus->card->dev;
  	input_set_drvdata(input_dev, beep);
 +#else
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 15)
-+	input_dev->cdev.dev = &codec->bus->pci->dev;
++	input_dev->cdev.dev = codec->bus->card>dev;
 +#endif
 +	input_dev->private = beep;
 +#endif /* 2.6.22 */ 
