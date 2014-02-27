@@ -1802,6 +1802,23 @@ static inline int sysfs_create_groups(struct kobject *kobj,
 	return 0;
 }
 
+#ifndef __ATTR
+#define __ATTR(_name, _mode, _show, _store) {				\
+	.attr = {.name = __stringify(_name), .mode = _mode },		\
+	.show	= _show,						\
+	.store	= _store,						\
+}
+#endif
+#ifndef __ATTR_RW
+#define __ATTR_RW(_name) __ATTR(_name, (S_IWUSR | S_IRUGO),		\
+			 _name##_show, _name##_store)
+#endif
+#ifndef __ATTR_RO
+#define __ATTR_RO(_name) {						\
+	.attr	= { .name = __stringify(_name), .mode = S_IRUGO },	\
+	.show	= _name##_show,						\
+}
+#endif
 #ifndef __ATTR_WO
 #define __ATTR_WO(_name) {						\
 	.attr	= { .name = __stringify(_name), .mode = S_IWUSR },	\
@@ -1809,10 +1826,19 @@ static inline int sysfs_create_groups(struct kobject *kobj,
 }
 #endif
 
+#ifndef DEVICE_ATTR_RW
+#define DEVICE_ATTR_RW(_name) \
+	struct device_attribute dev_attr_##_name = __ATTR_RW(_name)
+#endif
+#ifndef DEVICE_ATTR_RO
+#define DEVICE_ATTR_RO(_name) \
+	struct device_attribute dev_attr_##_name = __ATTR_RO(_name)
+#endif
 #ifndef DEVICE_ATTR_WO
 #define DEVICE_ATTR_WO(_name) \
 	struct device_attribute dev_attr_##_name = __ATTR_WO(_name)
 #endif
+
 #endif /* < 3.12 */
 
 #endif /* __SOUND_LOCAL_DRIVER_H */
