@@ -342,7 +342,7 @@
 
 static int   index[SNDRV_CARDS]  = SNDRV_DEFAULT_IDX;     /* Index 0-MAX */
 static char *id[SNDRV_CARDS]     = SNDRV_DEFAULT_STR;     /* ID for this card */
-static int   enable[SNDRV_CARDS] = SNDRV_DEFAULT_ENABLE;  /* Enable switches */
+static bool  enable[SNDRV_CARDS] = SNDRV_DEFAULT_ENABLE;  /* Enable switches */
 
 EXPORT_NO_SYMBOLS;
 
@@ -360,18 +360,18 @@ MODULE_PARM_DESC(id, "ID string for Prodif Plus soundcard.");
 module_param_array(enable, bool, NULL, 0444);
 MODULE_PARM_DESC(enable, "Enable Prodif Plus soundcard.");
 
-static int silent_exit = 0;
+static bool silent_exit;
 module_param(silent_exit, bool, 0444);
 MODULE_PARM_DESC(silent_exit, "Do not reset when driver is unloaded.");
 
-static int init_adat = 0;
+static bool init_adat;
 module_param(init_adat, bool, 0444);
 MODULE_PARM_DESC(init_adat, "Initialise the card in ADAT mode (instead of in digital stereo).");
 
 #if DEBUG
 static int debug_level = 0;
 
-module_param(debug_level, bool, 0444);
+module_param(debug_level, int, 0444);
 MODULE_PARM_DESC(debug_level, "Debug level.");
 #endif
 /* ********************************************************************** */
@@ -6099,7 +6099,7 @@ static int __devinit pdplus_probe(
                 LEAVE (-ENOENT);
         }
 
-	err = snd_card_create(index[dev], id[dev], THIS_MODULE, 0, &card);
+	err = snd_card_new(&pci->dev, index[dev], id[dev], THIS_MODULE, 0, &card);
 	if (err < 0)
                 LEAVE (err);
 
