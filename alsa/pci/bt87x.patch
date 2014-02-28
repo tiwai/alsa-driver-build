@@ -1,11 +1,11 @@
---- ../alsa-kernel/pci/bt87x.c	2013-02-25 10:03:33.000000000 +0100
-+++ bt87x.c	2013-03-04 10:02:33.416976274 +0100
+--- ../alsa-kernel/pci/bt87x.c	2014-02-28 11:55:48.986258632 +0100
++++ bt87x.c	2014-02-28 11:57:17.960731051 +0100
 @@ -1,3 +1,4 @@
 +#include "adriver.h"
  /*
   * bt87x.c - Brooktree Bt878/Bt879 driver for ALSA
   *
-@@ -843,21 +844,33 @@
+@@ -850,14 +851,26 @@
  {
  	int i;
  	const struct pci_device_id *supported;
@@ -31,19 +31,19 @@
 -		    blacklist[i].subdevice == pci->subsystem_device) {
 +		if (blacklist[i].subvendor == subsystem_vendor &&
 +		    blacklist[i].subdevice == subsystem_device) {
- 			snd_printdd(KERN_INFO "card %#04x-%#04x:%#04x has no audio\n",
--				    pci->device, pci->subsystem_vendor, pci->subsystem_device);
-+				    pci->device, subsystem_vendor, subsystem_device);
- 			return -EBUSY;
+ 			dev_dbg(&pci->dev,
+ 				"card %#04x-%#04x:%#04x has no audio\n",
+ 				    pci->device, pci->subsystem_vendor, pci->subsystem_device);
+@@ -865,7 +878,7 @@
  		}
  
- 	snd_printk(KERN_INFO "unknown card %#04x-%#04x:%#04x\n",
+ 	dev_info(&pci->dev, "unknown card %#04x-%#04x:%#04x\n",
 -		   pci->device, pci->subsystem_vendor, pci->subsystem_device);
 +		   pci->device, subsystem_vendor, subsystem_device);
- 	snd_printk(KERN_DEBUG "please mail id, board name, and, "
+ 	dev_info(&pci->dev, "please mail id, board name, and, "
  		   "if it works, the correct digital_rate option to "
  		   "<alsa-devel@alsa-project.org>\n");
-@@ -985,3 +998,5 @@
+@@ -993,3 +1006,5 @@
  
  module_init(alsa_card_bt87x_init)
  module_exit(alsa_card_bt87x_exit)

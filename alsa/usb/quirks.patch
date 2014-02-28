@@ -1,5 +1,5 @@
---- ../alsa-kernel/usb/quirks.c	2013-07-15 12:14:30.259860918 +0200
-+++ quirks.c	2013-08-06 10:53:33.113016271 +0200
+--- ../alsa-kernel/usb/quirks.c	2014-02-28 11:55:49.066259956 +0100
++++ quirks.c	2014-02-28 12:01:31.817927726 +0100
 @@ -1,3 +1,5 @@
 +#define __NO_VERSION__
 +#include "usbaudio.inc"
@@ -43,24 +43,24 @@
 +	if (get_cfg_desc(config)->wTotalLength == EXTIGY_FIRMWARE_SIZE_OLD ||
 +	    get_cfg_desc(config)->wTotalLength == EXTIGY_FIRMWARE_SIZE_NEW) {
 +#endif
- 		snd_printdd("sending Extigy boot sequence...\n");
+ 		dev_dbg(&dev->dev, "sending Extigy boot sequence...\n");
  		/* Send message to force it to reconnect with full interface. */
  		err = snd_usb_ctl_msg(dev, usb_sndctrlpipe(dev,0),
-@@ -566,8 +582,13 @@
- 		if (err < 0) snd_printdd("error usb_get_descriptor: %d\n", err);
+@@ -569,8 +585,13 @@
  		err = usb_reset_configuration(dev);
- 		if (err < 0) snd_printdd("error usb_reset_configuration: %d\n", err);
+ 		if (err < 0)
+ 			dev_dbg(&dev->dev, "error usb_reset_configuration: %d\n", err);
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 11)
- 		snd_printdd("extigy_boot: new boot length = %d\n",
+ 		dev_dbg(&dev->dev, "extigy_boot: new boot length = %d\n",
  			    le16_to_cpu(get_cfg_desc(config)->wTotalLength));
 +#else
-+		snd_printdd("extigy_boot: new boot length = %d\n",
++		dev_dbg(&dev->dev, "extigy_boot: new boot length = %d\n",
 +			    get_cfg_desc(config)->wTotalLength);
 +#endif
  		return -ENODEV; /* quit this anyway */
  	}
  	return 0;
-@@ -575,6 +596,8 @@
+@@ -578,6 +599,8 @@
  
  static int snd_usb_audigy2nx_boot_quirk(struct usb_device *dev)
  {
@@ -69,7 +69,7 @@
  	u8 buf = 1;
  
  	snd_usb_ctl_msg(dev, usb_rcvctrlpipe(dev, 0), 0x2a,
-@@ -586,6 +609,7 @@
+@@ -589,6 +612,7 @@
  				1, 2000, NULL, 0);
  		return -ENODEV;
  	}
@@ -77,22 +77,22 @@
  	return 0;
  }
  
-@@ -594,6 +618,10 @@
+@@ -597,6 +621,10 @@
  	int err;
  
  	if (dev->actconfig->desc.bConfigurationValue == 1) {
 +#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 19)
-+		snd_printk(KERN_INFO "usb-audio: "
++		dev_info(&dev->dev,
 +			   "Fast Track Pro needs to switch to config #2; set by udev or hotplug rules by yourself\n");
 +#else
- 		snd_printk(KERN_INFO "usb-audio: "
+ 		dev_info(&dev->dev,
  			   "Fast Track Pro switching to config #2\n");
  		/* This function has to be available by the usb core module.
-@@ -609,6 +637,7 @@
+@@ -613,6 +641,7 @@
  		   that will just be destroyed and recreated with a new
  		   configuration */
  		return -ENODEV;
 +#endif
  	} else
- 		snd_printk(KERN_INFO "usb-audio: Fast Track Pro config OK\n");
+ 		dev_info(&dev->dev, "Fast Track Pro config OK\n");
  

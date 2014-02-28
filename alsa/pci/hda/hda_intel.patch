@@ -1,5 +1,5 @@
---- ../../alsa-kernel/pci/hda/hda_intel.c	2014-02-27 09:34:52.313696856 +0100
-+++ hda_intel.c	2014-02-27 09:40:13.092698944 +0100
+--- ../../alsa-kernel/pci/hda/hda_intel.c	2014-02-28 09:00:39.850804004 +0100
++++ hda_intel.c	2014-02-28 12:05:19.806691656 +0100
 @@ -1,3 +1,4 @@
 +#include "hda_intel_hack.c"
  /*
@@ -15,7 +15,7 @@
  #include <linux/time.h>
  #include <linux/completion.h>
  
-@@ -428,8 +431,10 @@
+@@ -422,8 +425,10 @@
  	unsigned int wc_marked:1;
  	unsigned int no_period_wakeup:1;
  
@@ -26,7 +26,7 @@
  
  	int delay_negative_threshold;
  
-@@ -696,6 +701,57 @@
+@@ -690,6 +695,57 @@
  #define get_azx_dev(substream) (substream->runtime->private_data)
  
  #ifdef CONFIG_X86
@@ -84,7 +84,7 @@
  static void __mark_pages_wc(struct azx *chip, struct snd_dma_buffer *dmab, bool on)
  {
  	int pages;
-@@ -1876,6 +1932,7 @@
+@@ -1870,6 +1926,7 @@
  	azx_dev->opened = 0;
  }
  
@@ -92,7 +92,7 @@
  static cycle_t azx_cc_read(const struct cyclecounter *cc)
  {
  	struct azx_dev *azx_dev = container_of(cc, struct azx_dev, azx_cc);
-@@ -1954,6 +2011,9 @@
+@@ -1948,6 +2005,9 @@
  
  	return 0;
  }
@@ -102,7 +102,7 @@
  
  static struct snd_pcm_hardware azx_pcm_hw = {
  	.info =			(SNDRV_PCM_INFO_MMAP |
-@@ -2330,6 +2390,7 @@
+@@ -2324,6 +2384,7 @@
  			azx_readl(chip, OLD_SSYNC) & ~sbits);
  	else
  		azx_writel(chip, SSYNC, azx_readl(chip, SSYNC) & ~sbits);
@@ -110,7 +110,7 @@
  	if (start) {
  		azx_timecounter_init(substream, 0, 0);
  		if (nsync > 1) {
-@@ -2346,6 +2407,7 @@
+@@ -2340,6 +2401,7 @@
  			}
  		}
  	}
@@ -118,7 +118,7 @@
  	spin_unlock(&chip->reg_lock);
  	return 0;
  }
-@@ -2582,7 +2644,11 @@
+@@ -2573,7 +2635,11 @@
  	struct azx_pcm *apcm = snd_pcm_substream_chip(substream);
  	struct azx *chip = apcm->chip;
  	if (!azx_snoop(chip))
@@ -130,7 +130,7 @@
  	return snd_pcm_lib_default_mmap(substream, area);
  }
  #else
-@@ -3322,6 +3388,7 @@
+@@ -3311,6 +3377,7 @@
  static bool check_hdmi_disabled(struct pci_dev *pci)
  {
  	bool vga_inactive = false;
@@ -138,7 +138,7 @@
  	struct pci_dev *p = get_bound_vga(pci);
  
  	if (p) {
-@@ -3329,6 +3396,7 @@
+@@ -3318,6 +3385,7 @@
  			vga_inactive = true;
  		pci_dev_put(p);
  	}
@@ -146,7 +146,7 @@
  	return vga_inactive;
  }
  #endif /* SUPPORT_VGA_SWITCHEROO */
-@@ -3437,6 +3505,10 @@
+@@ -3424,6 +3492,10 @@
  	}
  }
  
@@ -157,7 +157,7 @@
  /*
   * white/black-list for enable_msi
   */
-@@ -3454,6 +3526,14 @@
+@@ -3441,6 +3513,14 @@
  	{}
  };
  
@@ -172,7 +172,7 @@
  static void check_msi(struct azx *chip)
  {
  	const struct snd_pci_quirk *q;
-@@ -3462,7 +3542,11 @@
+@@ -3449,7 +3529,11 @@
  		chip->msi = !!enable_msi;
  		return;
  	}
@@ -183,8 +183,8 @@
 +#endif
  	q = snd_pci_quirk_lookup(chip->pci, msi_black_list);
  	if (q) {
- 		printk(KERN_INFO
-@@ -3471,6 +3555,16 @@
+ 		dev_info(chip->card->dev,
+@@ -3458,6 +3542,16 @@
  		chip->msi = q->value;
  		return;
  	}
@@ -201,7 +201,7 @@
  
  	/* NVidia chipsets seem to cause troubles with MSI */
  	if (chip->driver_caps & AZX_DCAPS_NO_MSI) {
-@@ -3492,7 +3586,7 @@
+@@ -3479,7 +3573,7 @@
  		if (snoop) {
  			u8 val;
  			pci_read_config_byte(chip->pci, 0x42, &val);
@@ -210,7 +210,7 @@
  				snoop = false;
  		}
  		break;
-@@ -3650,7 +3744,7 @@
+@@ -3636,7 +3730,7 @@
  					 PCI_DEVICE_ID_ATI_SBX00_SMBUS,
  					 NULL);
  		if (p_smbus) {

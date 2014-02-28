@@ -1,11 +1,11 @@
---- ../../alsa-kernel/pci/emu10k1/emu10k1x.c	2012-04-24 12:18:48.000000000 +0200
-+++ emu10k1x.c	2012-04-24 12:35:32.000000000 +0200
+--- ../../alsa-kernel/pci/emu10k1/emu10k1x.c	2014-02-28 11:55:49.003258913 +0100
++++ emu10k1x.c	2014-02-28 12:05:19.777691178 +0100
 @@ -1,3 +1,4 @@
 +#include "adriver.h"
  /*
   *  Copyright (c) by Francisco Moraes <fmoraes@nc.rr.com>
   *  Driver EMU10K1X chips
-@@ -940,7 +941,7 @@
+@@ -967,7 +968,7 @@
  
  	pci_set_master(pci);
  	/* read revision & serial */
@@ -13,8 +13,8 @@
 +	chip->revision = snd_pci_revision(pci);
  	pci_read_config_dword(pci, PCI_SUBSYSTEM_VENDOR_ID, &chip->serial);
  	pci_read_config_word(pci, PCI_SUBSYSTEM_ID, &chip->model);
- 	snd_printk(KERN_INFO "Model %04x Rev %08x Serial %08x\n", chip->model,
-@@ -1620,3 +1621,5 @@
+ 	dev_info(card->dev, "Model %04x Rev %08x Serial %08x\n", chip->model,
+@@ -1649,3 +1650,5 @@
  };
  
  module_pci_driver(emu10k1x_driver);

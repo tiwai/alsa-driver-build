@@ -1,11 +1,11 @@
---- ../alsa-kernel/usb/card.c	2014-02-14 10:29:56.477068117 +0100
-+++ card.c	2014-02-14 10:39:06.138048150 +0100
+--- ../alsa-kernel/usb/card.c	2014-02-28 11:55:49.058259824 +0100
++++ card.c	2014-02-28 12:02:57.056335503 +0100
 @@ -1,3 +1,4 @@
 +#include "card.inc"
  /*
   *   (Tentative) USB Audio Driver for ALSA
   *
-@@ -258,6 +259,7 @@
+@@ -261,6 +262,7 @@
  	}
  
  	case UAC_VERSION_2: {
@@ -13,18 +13,18 @@
  		struct usb_interface_assoc_descriptor *assoc =
  			usb_ifnum_to_if(dev, ctrlif)->intf_assoc;
  
-@@ -277,8 +279,10 @@
+@@ -280,8 +282,10 @@
  		}
  
  		if (!assoc) {
 +#endif
- 			snd_printk(KERN_ERR "Audio class v2 interfaces need an interface association\n");
+ 			dev_err(&dev->dev, "Audio class v2 interfaces need an interface association\n");
  			return -EINVAL;
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 23)
  		}
  
  		for (i = 0; i < assoc->bInterfaceCount; i++) {
-@@ -289,6 +293,7 @@
+@@ -292,6 +296,7 @@
  		}
  
  		break;
@@ -32,7 +32,7 @@
  	}
  	}
  
-@@ -377,8 +382,13 @@
+@@ -380,8 +385,13 @@
  	chip->autoclock = autoclock;
  	chip->probing = 1;
  
@@ -46,7 +46,7 @@
  	INIT_LIST_HEAD(&chip->pcm_list);
  	INIT_LIST_HEAD(&chip->ep_list);
  	INIT_LIST_HEAD(&chip->midi_list);
-@@ -481,8 +491,12 @@
+@@ -484,8 +494,12 @@
  
  	alts = &intf->altsetting[0];
  	ifnum = get_iface_desc(alts)->bInterfaceNumber;
@@ -59,7 +59,7 @@
  	if (quirk && quirk->ifnum >= 0 && ifnum != quirk->ifnum)
  		goto __err_val;
  
-@@ -620,6 +634,7 @@
+@@ -623,6 +637,7 @@
  	}
  }
  
@@ -67,7 +67,7 @@
  /*
   * new 2.5 USB kernel API
   */
-@@ -740,6 +755,7 @@
+@@ -743,6 +758,7 @@
  #define usb_audio_resume	NULL
  #define usb_audio_reset_resume	NULL
  #endif		/* CONFIG_PM */
@@ -75,7 +75,7 @@
  
  static struct usb_device_id usb_audio_ids [] = {
  #include "quirks-table.h"
-@@ -755,14 +771,26 @@
+@@ -758,14 +774,26 @@
   */
  
  static struct usb_driver usb_audio_driver = {
