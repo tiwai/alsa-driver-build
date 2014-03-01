@@ -1,5 +1,5 @@
---- ../../alsa-kernel/include/core.h	2014-02-27 09:26:54.802204556 +0100
-+++ core.h	2014-02-27 09:28:32.882772147 +0100
+--- ../../alsa-kernel/include/core.h	2014-03-01 11:24:19.732897531 +0100
++++ core.h	2014-03-01 11:30:39.808708785 +0100
 @@ -100,8 +100,16 @@
  	char shortname[32];		/* short name of this soundcard */
  	char longname[80];		/* name of this soundcard */
@@ -63,7 +63,7 @@
  
  /* device.c */
  
-@@ -428,13 +459,21 @@
+@@ -428,10 +459,12 @@
  
  /* for easier backward-porting */
  #if defined(CONFIG_GAMEPORT) || defined(CONFIG_GAMEPORT_MODULE)
@@ -74,14 +74,18 @@
  #endif
 +#endif
  
- #ifdef CONFIG_PCI
  /* PCI quirk list helper */
+ struct snd_pci_quirk {
+@@ -444,6 +477,12 @@
+ #endif
+ };
+ 
 +#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 30)
 +/* rename for ABI compatibility */
 +#define snd_pci_quirk		snd_pci_new_quirk
 +#define snd_pci_quirk_lookup	snd_pci_new_quirk_lookup
 +#endif
 +
- struct snd_pci_quirk {
- 	unsigned short subvendor;	/* PCI subvendor ID */
- 	unsigned short subdevice;	/* PCI subdevice ID */
+ #define _SND_PCI_QUIRK_ID_MASK(vend, mask, dev)	\
+ 	.subvendor = (vend), .subdevice = (dev), .subdevice_mask = (mask)
+ #define _SND_PCI_QUIRK_ID(vend, dev) \
