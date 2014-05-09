@@ -754,6 +754,10 @@ static inline int pm_runtime_get_sync(struct device *dev) { return 1; }
 static inline int pm_runtime_put_sync(struct device *dev) { return -ENOSYS; }
 #endif /* < 2.6.32 */
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 9, 0)
+#define pm_runtime_active(dev)	((dev)->power.runtime_status == RPM_ACTIVE)
+#endif /* < 3.9.0 */
+
 static inline int pci_dev_run_wake(struct pci_dev *dev) { return 1; }
 
 #ifndef SET_SYSTEM_SLEEP_PM_OPS
@@ -1840,5 +1844,12 @@ static inline int sysfs_create_groups(struct kobject *kobj,
 #endif
 
 #endif /* < 3.12 */
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 5, 0)
+#include <linux/device.h>
+#ifndef dev_dbg_ratelimited
+#define dev_dbg_ratelimited(dev, fmt...) dev_dbg(dev, ##fmt)
+#endif
+#endif /* < 3.5.0 */
 
 #endif /* __SOUND_LOCAL_DRIVER_H */
