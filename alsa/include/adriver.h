@@ -754,10 +754,6 @@ static inline int pm_runtime_get_sync(struct device *dev) { return 1; }
 static inline int pm_runtime_put_sync(struct device *dev) { return -ENOSYS; }
 #endif /* < 2.6.32 */
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 9, 0)
-#define pm_runtime_active(dev)	((dev)->power.runtime_status == RPM_ACTIVE)
-#endif /* < 3.9.0 */
-
 static inline int pci_dev_run_wake(struct pci_dev *dev) { return 1; }
 
 #ifndef SET_SYSTEM_SLEEP_PM_OPS
@@ -779,6 +775,10 @@ static inline int pci_dev_run_wake(struct pci_dev *dev) { return 1; }
 #define SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn)
 #endif
 #endif /* < 2.6.34 */
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 9, 0)
+#define pm_runtime_active(dev)	((dev)->power.runtime_status == RPM_ACTIVE)
+#endif /* < 3.9.0 */
 
 /* wrapper for getnstimeofday()
  * it's needed for recent 2.6 kernels, too, due to lack of EXPORT_SYMBOL
