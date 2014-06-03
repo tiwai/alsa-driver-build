@@ -1850,6 +1850,9 @@ static inline int sysfs_create_groups(struct kobject *kobj,
 #ifndef dev_dbg_ratelimited
 #define dev_dbg_ratelimited(dev, fmt...) dev_dbg(dev, ##fmt)
 #endif
+#ifndef dev_info_ratelimited
+#define dev_info_ratelimited(dev, fmt...) dev_info(dev, ##fmt)
+#endif
 #endif /* < 3.5.0 */
 
 #endif /* __SOUND_LOCAL_DRIVER_H */
