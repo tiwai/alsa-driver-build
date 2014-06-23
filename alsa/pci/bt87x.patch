@@ -1,11 +1,19 @@
---- ../alsa-kernel/pci/bt87x.c	2014-02-28 11:55:48.986258632 +0100
-+++ bt87x.c	2014-02-28 11:57:17.960731051 +0100
-@@ -1,3 +1,4 @@
+--- ../alsa-kernel/pci/bt87x.c	2014-06-23 12:51:03.890080685 +0200
++++ bt87x.c	2014-06-23 18:07:21.812034164 +0200
+@@ -1,3 +1,12 @@
 +#include "adriver.h"
++
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0)
++#include <linux/atomic.h>
++#ifndef smp_mb__after_atomic
++#define smp_mb__after_atomic()	smp_mb__after_clear_bit()
++#endif
++#endif /* < 3.16.0 */
++
  /*
   * bt87x.c - Brooktree Bt878/Bt879 driver for ALSA
   *
-@@ -850,14 +851,26 @@
+@@ -850,14 +859,26 @@
  {
  	int i;
  	const struct pci_device_id *supported;
@@ -34,7 +42,7 @@
  			dev_dbg(&pci->dev,
  				"card %#04x-%#04x:%#04x has no audio\n",
  				    pci->device, pci->subsystem_vendor, pci->subsystem_device);
-@@ -865,7 +878,7 @@
+@@ -865,7 +886,7 @@
  		}
  
  	dev_info(&pci->dev, "unknown card %#04x-%#04x:%#04x\n",
@@ -43,7 +51,7 @@
  	dev_info(&pci->dev, "please mail id, board name, and, "
  		   "if it works, the correct digital_rate option to "
  		   "<alsa-devel@alsa-project.org>\n");
-@@ -993,3 +1006,5 @@
+@@ -993,3 +1014,5 @@
  
  module_init(alsa_card_bt87x_init)
  module_exit(alsa_card_bt87x_exit)
