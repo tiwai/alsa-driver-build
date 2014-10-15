@@ -1855,4 +1855,8 @@ static inline int sysfs_create_groups(struct kobject *kobj,
 #endif
 #endif /* < 3.5.0 */
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 12, 0)
+#define PTR_ERR_OR_ZERO(p) PTR_RET(p)
+#endif /* < 3.12 */
+
 #endif /* __SOUND_LOCAL_DRIVER_H */
