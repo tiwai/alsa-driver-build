@@ -21,6 +21,8 @@ snd-hpet-objs := hpetimer.o
 obj-$(CONFIG_SND_HPET) += snd-hpet.o
 obj-$(CONFIG_SND_BIT32_EMUL) += ioctl32/
 
+EXTRA_CFLAGS += -I$(SND_TOPDIR)/alsa-kernel/core
+
 include $(SND_TOPDIR)/Rules.make
 
 info.c: info.patch $(SND_TOPDIR)/alsa-kernel/core/info.c
