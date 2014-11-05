@@ -1,6 +1,6 @@
---- ../../alsa-kernel/pci/echoaudio/echoaudio.c	2010-01-29 23:17:31.000000000 +0100
-+++ echoaudio.c	2010-01-29 23:28:45.000000000 +0100
-@@ -1943,6 +1943,7 @@ static __devinit int snd_echo_create(str
+--- ../../alsa-kernel/pci/echoaudio/echoaudio.c	2014-11-05 15:38:31.147011646 +0100
++++ echoaudio.c	2014-11-05 15:43:23.744779248 +0100
+@@ -1906,6 +1906,7 @@
  	struct echoaudio *chip;
  	int err;
  	size_t sz;
@@ -8,7 +8,7 @@
  	static struct snd_device_ops ops = {
  		.dev_free = snd_echo_dev_free,
  	};
-@@ -2014,7 +2015,12 @@ static __devinit int snd_echo_create(str
+@@ -1977,7 +1978,12 @@
  	chip->comm_page_phys = chip->commpage_dma_buf.addr;
  	chip->comm_page = (struct comm_page *)chip->commpage_dma_buf.area;
  
@@ -22,15 +22,15 @@
  	if (err >= 0)
  		err = set_mixer_defaults(chip);
  	if (err < 0) {
-@@ -2245,6 +2251,7 @@ static int snd_echo_resume(struct pci_de
+@@ -2204,6 +2210,7 @@
  	struct comm_page *commpage, *commpage_bak;
  	u32 pipe_alloc_mask;
  	int err;
 +	u16 subsystem_device;
  
- 	DE_INIT(("resume start\n"));
  	pci_restore_state(pci);
-@@ -2252,7 +2259,12 @@ static int snd_echo_resume(struct pci_de
+ 	commpage_bak = kmalloc(sizeof(struct echoaudio), GFP_KERNEL);
+@@ -2212,7 +2219,12 @@
  	commpage = chip->comm_page;
  	memcpy(commpage_bak, commpage, sizeof(struct comm_page));
  
@@ -43,4 +43,4 @@
 +	err = init_hw(chip, chip->pci->device, subsystem_device);
  	if (err < 0) {
  		kfree(commpage_bak);
- 		DE_INIT(("resume init_hw err=%d\n", err));
+ 		dev_err(dev, "resume init_hw err=%d\n", err);
