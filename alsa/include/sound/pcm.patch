@@ -1,6 +1,6 @@
---- ../../alsa-kernel/include/pcm.h	2014-02-24 17:09:07.801751307 +0100
-+++ pcm.h	2014-02-27 09:40:11.649676426 +0100
-@@ -282,10 +282,18 @@
+--- ../../alsa-kernel/include/pcm.h	2014-11-05 11:37:45.762841230 +0100
++++ pcm.h	2014-11-05 15:43:22.943766205 +0100
+@@ -283,10 +283,18 @@
  	snd_pcm_uframes_t avail_max;
  	snd_pcm_uframes_t hw_ptr_base;	/* Position at buffer restart */
  	snd_pcm_uframes_t hw_ptr_interrupt; /* Position at interrupt time */
@@ -19,7 +19,7 @@
  
  	/* -- HW params -- */
  	snd_pcm_access_t access;	/* access mode */
-@@ -296,6 +304,9 @@
+@@ -297,6 +305,9 @@
  	snd_pcm_uframes_t period_size;	/* period size */
  	unsigned int periods;		/* periods */
  	snd_pcm_uframes_t buffer_size;	/* buffer size */
@@ -29,7 +29,7 @@
  	snd_pcm_uframes_t min_align;	/* Min alignment for the format */
  	size_t byte_align;
  	unsigned int frame_bits;
-@@ -303,11 +314,17 @@
+@@ -304,11 +315,17 @@
  	unsigned int info;
  	unsigned int rate_num;
  	unsigned int rate_den;
@@ -47,7 +47,7 @@
  	snd_pcm_uframes_t start_threshold;
  	snd_pcm_uframes_t stop_threshold;
  	snd_pcm_uframes_t silence_threshold; /* Silence filling happens when
-@@ -325,9 +342,22 @@
+@@ -326,9 +343,22 @@
  	struct snd_pcm_mmap_control *control;
  
  	/* -- locking / scheduling -- */
@@ -70,7 +70,7 @@
  	struct fasync_struct *fasync;
  
  	/* -- private section -- */
-@@ -344,8 +374,9 @@
+@@ -345,8 +375,9 @@
  
  	/* -- timer -- */
  	unsigned int timer_resolution;	/* timer resolution */
@@ -81,7 +81,7 @@
  	/* -- DMA -- */           
  	unsigned char *dma_area;	/* DMA area */
  	dma_addr_t dma_addr;		/* physical bus address (not accessible from main CPU) */
-@@ -358,9 +389,37 @@
+@@ -359,9 +390,37 @@
  	struct snd_pcm_oss_runtime oss;
  #endif
  
@@ -119,7 +119,7 @@
  };
  
  struct snd_pcm_group {		/* keep linked substreams */
-@@ -378,7 +437,15 @@
+@@ -380,7 +439,15 @@
  	int number;
  	char name[32];			/* substream name */
  	int stream;			/* stream (direction) */
@@ -135,7 +135,7 @@
  	size_t buffer_bytes_max;	/* limit ring buffer size */
  	struct snd_dma_buffer dma_buffer;
  	size_t dma_max;
-@@ -389,6 +456,9 @@
+@@ -391,6 +458,9 @@
          /* -- timer section -- */
  	struct snd_timer *timer;		/* timer */
  	unsigned timer_running: 1;	/* time is running */
@@ -145,7 +145,7 @@
  	/* -- next substream -- */
  	struct snd_pcm_substream *next;
  	/* -- linked substreams -- */
-@@ -401,7 +471,9 @@
+@@ -403,7 +473,9 @@
  	atomic_t mmap_count;
  	unsigned int f_flags;
  	void (*pcm_release)(struct snd_pcm_substream *);
@@ -155,8 +155,8 @@
  #if defined(CONFIG_SND_PCM_OSS) || defined(CONFIG_SND_PCM_OSS_MODULE)
  	/* -- OSS things -- */
  	struct snd_pcm_oss_substream oss;
-@@ -417,6 +489,13 @@
- #endif
+@@ -422,6 +494,13 @@
+ #endif /* CONFIG_SND_VERBOSE_PROCFS */
  	/* misc flags */
  	unsigned int hw_opened: 1;
 +
@@ -169,7 +169,7 @@
  };
  
  #define SUBSTREAM_BUSY(substream) ((substream)->ref_count > 0)
-@@ -500,7 +579,11 @@
+@@ -504,7 +583,11 @@
  int snd_pcm_status(struct snd_pcm_substream *substream,
  		   struct snd_pcm_status *status);
  int snd_pcm_start(struct snd_pcm_substream *substream);
