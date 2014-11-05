@@ -1,11 +1,11 @@
---- ../alsa-kernel/usb/card.c	2014-02-28 11:55:49.058259824 +0100
-+++ card.c	2014-02-28 12:02:57.056335503 +0100
+--- ../alsa-kernel/usb/card.c	2014-11-05 15:38:31.150011695 +0100
++++ card.c	2014-11-05 15:43:24.356789213 +0100
 @@ -1,3 +1,4 @@
 +#include "card.inc"
  /*
   *   (Tentative) USB Audio Driver for ALSA
   *
-@@ -261,6 +262,7 @@
+@@ -259,6 +260,7 @@
  	}
  
  	case UAC_VERSION_2: {
@@ -13,7 +13,7 @@
  		struct usb_interface_assoc_descriptor *assoc =
  			usb_ifnum_to_if(dev, ctrlif)->intf_assoc;
  
-@@ -280,8 +282,10 @@
+@@ -278,8 +280,10 @@
  		}
  
  		if (!assoc) {
@@ -24,7 +24,7 @@
  		}
  
  		for (i = 0; i < assoc->bInterfaceCount; i++) {
-@@ -292,6 +296,7 @@
+@@ -290,6 +294,7 @@
  		}
  
  		break;
@@ -32,7 +32,7 @@
  	}
  	}
  
-@@ -380,8 +385,13 @@
+@@ -373,8 +378,13 @@
  	chip->autoclock = autoclock;
  	chip->probing = 1;
  
@@ -46,7 +46,7 @@
  	INIT_LIST_HEAD(&chip->pcm_list);
  	INIT_LIST_HEAD(&chip->ep_list);
  	INIT_LIST_HEAD(&chip->midi_list);
-@@ -484,8 +494,12 @@
+@@ -477,8 +487,12 @@
  
  	alts = &intf->altsetting[0];
  	ifnum = get_iface_desc(alts)->bInterfaceNumber;
@@ -57,16 +57,16 @@
 +	id = USB_ID(dev->descriptor.idVendor, dev->descriptor.idProduct);
 +#endif
  	if (quirk && quirk->ifnum >= 0 && ifnum != quirk->ifnum)
- 		goto __err_val;
+ 		return -ENXIO;
  
-@@ -623,6 +637,7 @@
- 	}
+@@ -576,6 +590,7 @@
+ 	return err;
  }
  
 +#ifndef OLD_USB
  /*
-  * new 2.5 USB kernel API
-  */
+  * we need to take care of counter, since disconnection can be called also
+  * many times as well as usb_audio_probe().
 @@ -743,6 +758,7 @@
  #define usb_audio_resume	NULL
  #define usb_audio_reset_resume	NULL
