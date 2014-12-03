@@ -1,5 +1,5 @@
---- ../../alsa-kernel/pci/hda/hda_intel.c	2014-10-29 16:17:16.582376566 +0100
-+++ hda_intel.c	2014-10-31 09:32:43.120445370 +0100
+--- ../../alsa-kernel/pci/hda/hda_intel.c	2014-12-03 10:06:11.330292442 +0100
++++ hda_intel.c	2014-12-03 12:04:28.926522936 +0100
 @@ -1,3 +1,4 @@
 +#include "hda_intel_hack.c"
  /*
@@ -15,7 +15,7 @@
  #include <linux/time.h>
  #include <linux/completion.h>
  
-@@ -362,6 +365,57 @@
+@@ -377,6 +380,57 @@
  };
  
  #ifdef CONFIG_X86
@@ -73,7 +73,7 @@
  static void __mark_pages_wc(struct azx *chip, struct snd_dma_buffer *dmab, bool on)
  {
  	int pages;
-@@ -1177,6 +1231,7 @@
+@@ -1193,6 +1247,7 @@
  static bool check_hdmi_disabled(struct pci_dev *pci)
  {
  	bool vga_inactive = false;
@@ -81,7 +81,7 @@
  	struct pci_dev *p = get_bound_vga(pci);
  
  	if (p) {
-@@ -1184,10 +1239,15 @@
+@@ -1200,10 +1255,15 @@
  			vga_inactive = true;
  		pci_dev_put(p);
  	}
@@ -97,7 +97,7 @@
  /*
   * white/black-listing for position_fix
   */
-@@ -1331,6 +1391,14 @@
+@@ -1347,6 +1407,14 @@
  	{}
  };
  
@@ -112,7 +112,7 @@
  static void check_msi(struct azx *chip)
  {
  	const struct snd_pci_quirk *q;
-@@ -1339,7 +1407,11 @@
+@@ -1355,7 +1423,11 @@
  		chip->msi = !!enable_msi;
  		return;
  	}
@@ -124,16 +124,29 @@
  	q = snd_pci_quirk_lookup(chip->pci, msi_black_list);
  	if (q) {
  		dev_info(chip->card->dev,
-@@ -1369,7 +1441,7 @@
- 		if (snoop) {
- 			u8 val;
- 			pci_read_config_byte(chip->pci, 0x42, &val);
--			if (!(val & 0x80) && chip->pci->revision == 0x30)
-+			if (!(val & 0x80) && snd_pci_revision(chip->pci) == 0x30)
- 				snoop = false;
+@@ -1392,7 +1464,7 @@
+ 		 */
+ 		u8 val;
+ 		pci_read_config_byte(chip->pci, 0x42, &val);
+-		if (!(val & 0x80) && chip->pci->revision == 0x30)
++		if (!(val & 0x80) && snd_pci_revision(chip->pci) == 0x30)
+ 			snoop = false;
+ 	}
+ 
+@@ -1523,10 +1595,12 @@
+ 	}
+ 
+ 	if (chip->msi) {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
+ 		if (chip->driver_caps & AZX_DCAPS_NO_MSI64) {
+ 			dev_dbg(card->dev, "Disabling 64bit MSI\n");
+ 			pci->no_64bit_msi = true;
  		}
- 		break;
-@@ -1528,7 +1600,7 @@
++#endif
+ 		if (pci_enable_msi(pci) < 0)
+ 			chip->msi = 0;
+ 	}
+@@ -1552,7 +1626,7 @@
  					 PCI_DEVICE_ID_ATI_SBX00_SMBUS,
  					 NULL);
  		if (p_smbus) {
@@ -142,7 +155,7 @@
  				gcap &= ~AZX_GCAP_64OK;
  			pci_dev_put(p_smbus);
  		}
-@@ -1772,7 +1844,11 @@
+@@ -1796,7 +1870,11 @@
  	struct azx_pcm *apcm = snd_pcm_substream_chip(substream);
  	struct azx *chip = apcm->chip;
  	if (!azx_snoop(chip) && chip->driver_type != AZX_DRIVER_CMEDIA)
