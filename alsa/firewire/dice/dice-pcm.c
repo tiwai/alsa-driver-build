@@ -1,2 +1,2 @@
 #include "adriver.h"
-#include "../../alsa-kernel/firewire/dice/dice.c"
+#include "../../alsa-kernel/firewire/dice/dice-pcm.c"
