@@ -1,6 +1,6 @@
---- ../../alsa-kernel/pci/echoaudio/echoaudio.c	2014-11-05 15:38:31.147011646 +0100
-+++ echoaudio.c	2014-11-05 15:43:23.744779248 +0100
-@@ -1906,6 +1906,7 @@
+--- ../../alsa-kernel/pci/echoaudio/echoaudio.c	2015-01-11 11:56:56.520391385 +0100
++++ echoaudio.c	2015-01-14 15:50:56.609983765 +0100
+@@ -1901,6 +1901,7 @@
  	struct echoaudio *chip;
  	int err;
  	size_t sz;
@@ -8,7 +8,7 @@
  	static struct snd_device_ops ops = {
  		.dev_free = snd_echo_dev_free,
  	};
-@@ -1977,7 +1978,12 @@
+@@ -1972,7 +1973,12 @@
  	chip->comm_page_phys = chip->commpage_dma_buf.addr;
  	chip->comm_page = (struct comm_page *)chip->commpage_dma_buf.area;
  
@@ -22,15 +22,15 @@
  	if (err >= 0)
  		err = set_mixer_defaults(chip);
  	if (err < 0) {
-@@ -2204,6 +2210,7 @@
+@@ -2195,6 +2201,7 @@
  	struct comm_page *commpage, *commpage_bak;
  	u32 pipe_alloc_mask;
  	int err;
 +	u16 subsystem_device;
  
- 	pci_restore_state(pci);
  	commpage_bak = kmalloc(sizeof(struct echoaudio), GFP_KERNEL);
-@@ -2212,7 +2219,12 @@
+ 	if (commpage_bak == NULL)
+@@ -2202,7 +2209,12 @@
  	commpage = chip->comm_page;
  	memcpy(commpage_bak, commpage, sizeof(struct comm_page));
  
