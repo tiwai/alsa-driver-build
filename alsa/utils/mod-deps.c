@@ -511,6 +511,8 @@ static struct cond * create_cond(char *line)
 	if (word == NULL)
 		nomem();
 	while (get_word(line, word)) {
+		if (*word == '#')
+			goto out;
 		cond = calloc(sizeof(struct cond), 1);
 		if (cond == NULL)
 			nomem();
@@ -568,6 +570,8 @@ static struct cond * create_cond(char *line)
 		if (strcmp(cond->name, "EMPTY"))
 			find_or_create_dep(word);
 		while (get_word(line, word)) {
+			if (*word == '#')
+				goto out;
 			if (!strcmp(word, "&&"))
 				cond->type = COND_AND;
 			else if (!strcmp(word, "||"))
@@ -588,6 +592,7 @@ static struct cond * create_cond(char *line)
 			break;
 		}
 	}
+ out:
 	free(word);
 	return first;
 }
