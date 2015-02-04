@@ -1,5 +1,5 @@
---- ../../alsa-kernel/core/seq/seq_clientmgr.c	2011-11-08 07:59:20.000000000 +0100
-+++ seq_clientmgr.c	2012-07-19 14:01:02.000000000 +0200
+--- ../../alsa-kernel/core/seq/seq_clientmgr.c	2015-02-03 17:57:48.504745673 +0100
++++ seq_clientmgr.c	2015-02-04 16:11:46.134741332 +0100
 @@ -1,3 +1,5 @@
 +#define __NO_VERSION__
 +#include "adriver.h"
@@ -14,7 +14,7 @@
  #include <linux/export.h>
  #include <linux/slab.h>
  #include <sound/core.h>
-@@ -2212,12 +2215,25 @@
+@@ -2223,12 +2226,25 @@
  	return snd_seq_do_ioctl(client, cmd, (void __user *) arg);
  }
  
@@ -41,7 +41,7 @@
  /* -------------------------------------------------------- */
  
  
-@@ -2555,8 +2571,12 @@
+@@ -2566,8 +2582,12 @@
  	.release =	snd_seq_release,
  	.llseek =	no_llseek,
  	.poll =		snd_seq_poll,
@@ -53,4 +53,4 @@
 +#endif
  };
  
- /* 
+ static struct device seq_dev;
