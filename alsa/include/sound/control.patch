@@ -1,6 +1,6 @@
---- ../../alsa-kernel/include/control.h	2011-01-10 16:50:14.000000000 +0100
-+++ control.h	2011-03-04 12:42:43.000000000 +0100
-@@ -56,6 +56,9 @@
+--- ../../alsa-kernel/include/control.h	2015-02-03 17:57:48.469745052 +0100
++++ control.h	2015-02-04 16:07:37.477453819 +0100
+@@ -61,6 +61,9 @@
  
  struct snd_kcontrol_volatile {
  	struct snd_ctl_file *owner;	/* locked */
@@ -10,7 +10,7 @@
  	unsigned int access;	/* access rights */
  };
  
-@@ -91,7 +94,15 @@
+@@ -102,13 +105,28 @@
  struct snd_ctl_file {
  	struct list_head list;		/* list of all control files */
  	struct snd_card *card;
@@ -23,10 +23,9 @@
 +#else
  	struct pid *pid;
 +#endif
- 	int prefer_pcm_subdevice;
- 	int prefer_rawmidi_subdevice;
+ 	int preferred_subdevice[SND_CTL_SUBDEV_ITEMS];
  	wait_queue_head_t change_sleep;
-@@ -99,6 +110,13 @@
+ 	spinlock_t read_lock;
  	struct fasync_struct *fasync;
  	int subscribed;			/* read interface is activated */
  	struct list_head events;	/* waiting events for read */
