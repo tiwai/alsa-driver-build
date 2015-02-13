@@ -1638,6 +1638,8 @@ CHECK_KERNEL_HEADER(linux/thinkpad_acpi.h, [#include \"thinkpad_acpi_compat.h\"
 ])
 CHECK_KERNEL_HEADER(linux/dell-led.h, [#include \"dell_led_compat.h\"
 ])
+CHECK_KERNEL_HEADER(linux/timecounter.h, [#include <linux/clocksource.h>
+])
 
 dnl link to the latest trace/events/*.h
 echo "Copying trace/events headers"
