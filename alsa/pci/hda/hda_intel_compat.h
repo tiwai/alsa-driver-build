@@ -16,7 +16,7 @@
 #ifndef __SOUND_HDA_INTEL_H
 #define __SOUND_HDA_INTEL_H
 
-#include "hda_priv.h"
+#include "hda_controller.h"
 
 struct hda_intel {
 	struct azx chip;
