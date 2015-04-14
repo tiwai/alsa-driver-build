@@ -1,5 +1,5 @@
 #include "adriver.h"
-#if LINUX_VERSION_CODE <= KERNEL_VERSION(3, 15, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 15, 0)
 #include <linux/device.h>
 static int pm_runtime_force_suspend(struct device *dev);
 static int pm_runtime_force_resume(struct device *dev);
@@ -15,12 +15,12 @@ static int pm_runtime_force_suspend(struct device *dev)
 	if (pm_runtime_status_suspended(dev))
 		return 0;
 
-	if (!device->driver->pm || !device->driver->pm->runtime_suspend) {
+	if (!dev->driver->pm || !dev->driver->pm->runtime_suspend) {
 		ret = -ENOSYS;
 		goto err;
 	}
 
-	ret = device->driver->pm->runtime_suspend(dev);
+	ret = dev->driver->pm->runtime_suspend(dev);
 	if (ret)
 		goto err;
 
@@ -35,12 +35,12 @@ static int pm_runtime_force_resume(struct device *dev)
 {
 	int ret = 0;
 
-	if (!device->driver->pm || !device->driver->pm->runtime_resume) {
+	if (!dev->driver->pm || !dev->driver->pm->runtime_resume) {
 		ret = -ENOSYS;
 		goto out;
 	}
 
-	ret = device->driver->pm->runtime_resume(dev);
+	ret = dev->driver->pm->runtime_resume(dev);
 	if (ret)
 		goto out;
 
