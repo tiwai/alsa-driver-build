@@ -61,7 +61,7 @@ ifndef KBUILD_CHECKSRC
 endif
 export KBUILD_VERBOSE KBUILD_CHECKSRC
 
-SUBDIRS  = include acore i2c drivers isa synth pci aoa soc
+SUBDIRS  = include acore i2c drivers isa synth pci aoa soc hda
 CSUBDIRS =
 
 ifeq (y,$(CONFIG_ARM))
