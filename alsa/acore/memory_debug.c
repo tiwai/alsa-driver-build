@@ -176,8 +176,6 @@ char *snd_hidden_kstrndup(const char *s, size_t maxlen, gfp_t gfp_flags)
 }
 
 #ifdef CONFIG_PROC_FS
-static struct snd_info_entry *snd_memory_info_entry;
-
 static void snd_memory_info_read(struct snd_info_entry *entry, struct snd_info_buffer *buffer)
 {
 	snd_iprintf(buffer, "kmalloc: %li bytes\n", snd_alloc_kmalloc);
@@ -190,19 +188,11 @@ int __init snd_memory_info_init(void)
 	struct snd_info_entry *entry;
 
 	entry = snd_info_create_module_entry(THIS_MODULE, "meminfo", NULL);
-	if (entry) {
-		entry->c.text.read = snd_memory_info_read;
-		if (snd_info_register(entry) < 0) {
-			snd_info_free_entry(entry);
-			entry = NULL;
-		}
-	}
-	snd_memory_info_entry = entry;
+	if (!entry)
+		return -ENOMEM;
+	entry->c.text.read = snd_memory_info_read;
+	if (snd_info_register(entry) < 0)
+		return -ENOMEM;
 	return 0;
-}
-
-void __exit snd_memory_info_done(void)
-{
-	snd_info_free_entry(snd_memory_info_entry);
 }
 #endif
