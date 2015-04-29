@@ -1,14 +1,13 @@
 --- ../alsa-kernel/core/pcm_native.c	2015-04-27 12:25:29.381172766 +0200
-+++ pcm_native.c	2015-04-28 08:43:31.325227970 +0200
-@@ -1,3 +1,7 @@
++++ pcm_native.c	2015-04-29 07:46:49.181015137 +0200
+@@ -1,3 +1,6 @@
 +#define __NO_VERSION__
 +#include "adriver.h"
-+#include <linux/uio.h>
 +
  /*
   *  Digital Audio (PCM) abstract layer
   *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
-@@ -20,6 +24,7 @@
+@@ -20,6 +23,7 @@
   */
  
  #include <linux/mm.h>
@@ -16,7 +15,7 @@
  #include <linux/module.h>
  #include <linux/file.h>
  #include <linux/slab.h>
-@@ -36,6 +41,14 @@
+@@ -36,6 +40,15 @@
  #include <sound/minors.h>
  #include <linux/uio.h>
  
@@ -24,6 +23,7 @@
 +#define SND_PCM_USE_ITER
 +#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 19)
 +#define SND_PCM_USE_AIO
++#include <linux/aio.h>
 +#else
 +#define SND_PCM_USE_READV
 +#endif
@@ -126,16 +126,16 @@
  		substream->hw_opened = 0;
  	}
 +#ifdef CONFIG_SND_HAVE_PM_QOS_REQUEST_STATIC
-+	if (pm_qos_request_active(&substream->latency_pm_qos_req))
-+		pm_qos_remove_request(&substream->latency_pm_qos_req);
+ 	if (pm_qos_request_active(&substream->latency_pm_qos_req))
+ 		pm_qos_remove_request(&substream->latency_pm_qos_req);
 +#elif defined(CONFIG_SND_HAVE_PM_QOS_REQUEST_LIST)
 +	if (substream->latency_pm_qos_req) {
 +		pm_qos_remove_request(substream->latency_pm_qos_req);
 +		substream->latency_pm_qos_req = NULL;
 +	}
 +#elif defined(CONFIG_SND_HAVE_PM_QOS_REQUEST)
- 	if (pm_qos_request_active(&substream->latency_pm_qos_req))
- 		pm_qos_remove_request(&substream->latency_pm_qos_req);
++	if (pm_qos_request_active(&substream->latency_pm_qos_req))
++		pm_qos_remove_request(&substream->latency_pm_qos_req);
 +#else
 +	pm_qos_remove_requirement(PM_QOS_CPU_DMA_LATENCY,
 +				  substream->latency_id);
