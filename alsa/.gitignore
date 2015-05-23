@@ -73,6 +73,7 @@ include/config1.h
 include/config1.h.in
 include/alsa-kconfig.h
 include/asm/
+include/drm/
 include/pcmcia/
 include/trace/
 include/linux/*

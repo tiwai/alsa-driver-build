@@ -493,6 +493,7 @@ AC_DEFUN([CHECK_KERNEL_HEADER], [
       mkdir -p include/linux include/asm include/media
       mkdir -p include/linux/regulator include/linux/usb include/pcmcia
       mkdir -p include/trace
+      mkdir -p include/drm
       if test -z "$2" ; then
         echo "Creating a dummy <$1>..."
         touch include/$1
@@ -736,6 +737,7 @@ rm -rf include/linux/regulator
 rm -f include/asm/*.h
 rm -rf include/pcmcia
 rm -rf include/trace
+rm -rf include/drm
 
 
 dnl Directory for modules
@@ -1640,6 +1642,7 @@ CHECK_KERNEL_HEADER(linux/dell-led.h, [#include \"dell_led_compat.h\"
 ])
 CHECK_KERNEL_HEADER(linux/timecounter.h, [#include <linux/clocksource.h>
 ])
+CHECK_KERNEL_HEADER(drm/i915_component.h)
 
 dnl link to the latest trace/events/*.h
 echo "Copying trace/events headers"
