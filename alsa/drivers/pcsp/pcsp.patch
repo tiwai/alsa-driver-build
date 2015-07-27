@@ -1,11 +1,29 @@
---- ../../alsa-kernel/drivers/pcsp/pcsp.c	2014-02-24 17:09:07.852752039 +0100
-+++ pcsp.c	2014-02-27 09:40:12.222685368 +0100
+--- ../../alsa-kernel/drivers/pcsp/pcsp.c	2015-07-24 20:09:03.433652027 +0200
++++ pcsp.c	2015-07-27 11:30:20.121244088 +0200
 @@ -1,3 +1,4 @@
 +#include "adriver.h"
  /*
   * PC-Speaker driver for Linux
   *
-@@ -103,6 +104,9 @@
+@@ -42,8 +43,17 @@
+ static int snd_pcsp_create(struct snd_card *card)
+ {
+ 	static struct snd_device_ops ops = { };
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0)
+ 	unsigned int resolution = hrtimer_resolution;
++#else
++	unsigned int resolution;
++#endif
+ 	int err, div, min_div, order;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 2, 0)
++	struct timespec tp;
++	hrtimer_get_res(CLOCK_MONOTONIC, &tp);
++	resolution = tp.tv_nsec;
++#endif
+ 
+ 	if (!nopcm) {
+ 		if (resolution > PCSP_MAX_PERIOD_NS) {
+@@ -100,6 +110,9 @@
  		return -EINVAL;
  
  	hrtimer_init(&pcsp_chip.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
