@@ -1,5 +1,5 @@
---- ../alsa-kernel/core/memalloc.c	2014-02-24 17:09:07.843751910 +0100
-+++ memalloc.c	2015-02-04 16:11:46.082740592 +0100
+--- ../alsa-kernel/core/memalloc.c	2015-07-24 20:09:03.433652027 +0200
++++ memalloc.c	2015-07-27 14:46:53.377801790 +0200
 @@ -1,3 +1,4 @@
 +#include "memalloc.inc"
  /*
@@ -193,15 +193,18 @@
  	dma_free_coherent(dev, PAGE_SIZE << pg, ptr, dma);
  }
  
-@@ -123,6 +254,7 @@
+@@ -123,6 +254,10 @@
  	dmab->area = NULL;
  	dmab->addr = 0;
  
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 2, 0)
++#define of_gen_pool_get(a, b, c) of_get_named_gen_pool(a, b, c)
++#endif
  	if (dev->of_node)
- 		pool = of_get_named_gen_pool(dev->of_node, "iram", 0);
+ 		pool = of_gen_pool_get(dev->of_node, "iram", 0);
  
-@@ -133,6 +265,7 @@
+@@ -133,6 +268,7 @@
  	dmab->private_data = pool;
  
  	dmab->area = gen_pool_dma_alloc(pool, size, &dmab->addr);
@@ -209,7 +212,7 @@
  }
  
  /**
-@@ -141,10 +274,12 @@
+@@ -141,10 +277,12 @@
   */
  static void snd_free_dev_iram(struct snd_dma_buffer *dmab)
  {
@@ -222,7 +225,7 @@
  }
  #endif /* CONFIG_GENERIC_ALLOCATOR */
  #endif /* CONFIG_HAS_DMA */
-@@ -297,3 +432,5 @@
+@@ -297,3 +435,5 @@
  
  EXPORT_SYMBOL(snd_malloc_pages);
  EXPORT_SYMBOL(snd_free_pages);
