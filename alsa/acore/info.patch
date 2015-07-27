@@ -1,5 +1,5 @@
 --- ../alsa-kernel/core/info.c	2015-05-18 11:26:57.088632828 +0200
-+++ info.c	2015-05-19 13:16:49.230323229 +0200
++++ info.c	2015-07-27 11:25:20.937536665 +0200
 @@ -1,3 +1,7 @@
 +#define __NO_VERSION__
 +#include "adriver.h"
@@ -206,7 +206,7 @@
 -		    init_utsname()->release);
 +		    "Advanced Linux Sound Architecture Driver Version "
 +		    CONFIG_SND_VERSION ".\n"
-+		    "Compiled on " __DATE__ " for kernel %s"
++		    "Compiled for kernel %s"
 +#ifdef CONFIG_SMP
 +		    " (SMP)"
 +#endif
