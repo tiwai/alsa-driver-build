@@ -5,7 +5,7 @@ endif
 include $(SND_TOPDIR)/toplevel.config
 include $(SND_TOPDIR)/Makefile.conf
 
-clean-files := hda_intel.c hda_beep.c
+clean-files := hda_intel.c hda_beep.c patch_hdmi.c
 
 EXTRA_CFLAGS += -I$(SND_TOPDIR)/alsa-kernel/pci/hda
 
@@ -24,3 +24,4 @@ include $(SND_TOPDIR)/Rules.make
 
 hda_intel.c: hda_intel.patch $(SND_TOPDIR)/alsa-kernel/pci/hda/hda_intel.c
 hda_beep.c: hda_beep.patch $(SND_TOPDIR)/alsa-kernel/pci/hda/hda_beep.c
+patch_hdmi.c: patch_hdmi.patch $(SND_TOPDIR)/alsa-kernel/pci/hda/patch_hdmi.c

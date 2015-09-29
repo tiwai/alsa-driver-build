@@ -1,0 +1,76 @@
+--- ../../alsa-kernel/pci/hda/patch_hdmi.c	2015-09-25 10:08:21.842439055 +0200
++++ patch_hdmi.c	2015-09-29 22:28:08.851217112 +0200
+@@ -1,3 +1,4 @@
++#include "adriver.h"
+ /*
+  *
+  *  patch_hdmi.c - routines for HDMI/DisplayPort codecs
+@@ -38,7 +39,9 @@
+ #include <sound/asoundef.h>
+ #include <sound/tlv.h>
+ #include <sound/hdaudio.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 3, 0)
+ #include <sound/hda_i915.h>
++#endif
+ #include "hda_codec.h"
+ #include "hda_local.h"
+ #include "hda_jack.h"
+@@ -147,8 +150,10 @@
+ 	struct hda_multi_out multiout;
+ 	struct hda_pcm_stream pcm_playback;
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 3, 0)
+ 	/* i915/powerwell (Haswell+/Valleyview+) specific */
+ 	struct i915_audio_component_audio_ops i915_audio_ops;
++#endif
+ };
+ 
+ 
+@@ -1802,7 +1807,9 @@
+ 	struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
+ 	hda_nid_t pin_nid = per_pin->pin_nid;
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 0)
+ 	struct i915_audio_component *acomp = codec->bus->core.audio_component;
++#endif
+ 	bool non_pcm;
+ 	int pinctl;
+ 
+@@ -1819,12 +1826,14 @@
+ 		intel_not_share_assigned_cvt(codec, pin_nid, per_pin->mux_idx);
+ 	}
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 4, 0)
+ 	/* Call sync_audio_rate to set the N/CTS/M manually if necessary */
+ 	/* Todo: add DP1.2 MST audio support later */
+ 	if (acomp && acomp->ops && acomp->ops->sync_audio_rate)
+ 		acomp->ops->sync_audio_rate(acomp->dev,
+ 				intel_pin2port(pin_nid),
+ 				runtime->rate);
++#endif
+ 
+ 	non_pcm = check_non_pcm_per_cvt(codec, cvt_nid);
+ 	mutex_lock(&per_pin->lock);
+@@ -2215,8 +2224,10 @@
+ 	struct hdmi_spec *spec = codec->spec;
+ 	int pin_idx;
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 3, 0)
+ 	if (is_haswell_plus(codec) || is_valleyview_plus(codec))
+ 		snd_hdac_i915_register_notifier(NULL);
++#endif
+ 
+ 	for (pin_idx = 0; pin_idx < spec->num_pins; pin_idx++) {
+ 		struct hdmi_spec_per_pin *per_pin = get_pin(spec, pin_idx);
+@@ -2379,9 +2390,11 @@
+ 
+ 	if (is_haswell_plus(codec) || is_valleyview_plus(codec)) {
+ 		codec->depop_delay = 0;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 3, 0)
+ 		spec->i915_audio_ops.audio_ptr = codec;
+ 		spec->i915_audio_ops.pin_eld_notify = intel_pin_eld_notify;
+ 		snd_hdac_i915_register_notifier(&spec->i915_audio_ops);
++#endif
+ 	}
+ 
+ 	if (hdmi_parse_codec(codec) < 0) {
